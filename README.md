@@ -58,7 +58,7 @@
 
 <!-- Change your small logo -->
 <a href="https://github.com/ICSLabOrganization/SOTA_CV App">
-  <img alt="@ICSLabOrganization/SOTA_CV App's brand logo without text" align="right" src="https://i.imgur.com/3qK1sie.png" width="18%" />
+  <img alt="@ICSLabOrganization/SOTA_CV App's brand logo without text" align="right" src="https://github.com/ICSLabOrganization/SOTA_CV-App/blob/master/assets/logo_icslab.png" width="18%" />
 </a>
 
 
