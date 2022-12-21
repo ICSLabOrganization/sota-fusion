@@ -8,7 +8,7 @@
     <img width="100%" src="https://github.com/ICSLabOrganization/SOTA_CV-App/blob/master/assets/logo_icslab.png" alt="@ICSLabOrganization/SOTA_CV-App's logo">
   </a>
   <br>
-  <a href="https://github.com/ICSLabOrganization/SOTA_CV-App/issues">
+  <a href="">
     <img src="https://img.shields.io/packagist/stars/ICSLabOrganization/SOTA_CV-App" 
     alt="ICSLabOrganization/SOTA_CV-App's stars"/>
   </a>
