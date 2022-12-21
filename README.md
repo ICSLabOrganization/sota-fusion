@@ -9,10 +9,16 @@
   </a>
   <br>
   <a href="https://github.com/ICSLabOrganization/SOTA_CV-App/issues">
-    <img src="https://img.shields.io/github/issues/ICSLabOrganization/SOTA_CV-App?color=0088ff&style=for-the-badge&logo=github" alt="ICSLabOrganization/SOTA_CV-App's issues"/>
+    <img src="https://img.shields.io/packagist/stars/ICSLabOrganization/SOTA_CV-App" 
+    alt="ICSLabOrganization/SOTA_CV-App's stars"/>
   </a>
-  <a href="https://github.com/ICSLabOrganization/SOTA_CV-App/pulls">
-    <img src="https://img.shields.io/github/issues-pr/ICSLabOrganization/SOTA_CV-App?color=0088ff&style=for-the-badge&logo=github"  alt="ICSLabOrganization/SOTA_CV-App's pull requests"/>
+  <a href="">
+    <img src="https://img.shields.io/github/downloads/ICSLabOrganization/SOTA_CV-App/total"  
+    alt="ICSLabOrganization/SOTA_CV-App's downloads"/>
+  </a>
+  <a href="">
+    <img src="https://img.shields.io/github/last-commit/ICSLabOrganization/SOTA_CV-App"  
+    alt="ICSLabOrganization/SOTA_CV-App's last commit"/>
   </a>
 </div>
 
