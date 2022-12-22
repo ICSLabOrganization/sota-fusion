@@ -1,5 +1,3 @@
-<!-- markdownlint-disable MD032 MD033-->
-<!-- Write your README.md file. Build something amazing! This README.md template can guide you to build your project documentation, but feel free to modify it as you wish 🥰 -->
 # 🔥 **SOTA_CV-App**
 
 <div align="center">
@@ -48,15 +46,17 @@
 ## 🌲 **Project tree**
 ```
 .
-├── assets      
+├── assets
 ├── CHANGELOG.md
-├── examples
-├── library
+├── contribute      Resources for contributors
+├── docs            User guide and documentation
+├── examples        Examples
+├── library         Libraries and third parties 
 ├── LICENSE
 ├── README.md
-├── src
-├── test
-└── tools
+├── src             Main program
+├── test            Unit tests 
+└── tools           Additional tools
 ```
 ---
 
