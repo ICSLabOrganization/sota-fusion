@@ -26,37 +26,49 @@
 
 ## 🤔 **About the project**
 
-* <!-- ... [WHY DID YOU CREATED THIS PROJECT?, MOTIVATION, PURPOSE, DESCRIPTION, OBJECTIVES, etc] -->
-
+* SOTA_CV-App is a application that combines many of the SOTA technologies in computer vision into only one.
+  * Gesture tracking
+  * Speech to images
+  * Style transfer
+  
 ---
 
 ## ⚡ **Installation**
 
-* <!-- ... [SHOW HOW YOUR PROJECT IS INSTALLED] -->
+* Test
 
 ---
 
 ## 🚀 **Usage**
 
-* <!-- ... [SHOW HOW YOUR PROJECT IS USED] -->
+*
 
 ---
 
 ## 🌲 **Project tree**
-
-<!-- ... [SHOW YOUR PROJECT TREE HERE IF USEFUL] -->
-
+```
+.
+├── assets      
+├── CHANGELOG.md
+├── examples
+├── library
+├── LICENSE
+├── README.md
+├── src
+├── test
+└── tools
+```
 ---
 
 ## 📝 **Additional notes**
 
-* <!-- ... [ADD ADDITIONAL NOTES] -->
+* 
 
 ---
 
 ## 📸 **Screenshots**
 
-<!-- ... [SOME DESCRIPTIVE IMAGES] -->
+
 
 ---
 
@@ -76,17 +88,11 @@ By donating, you will help the development of this project, and *you will be fea
   <img src="https://img.shields.io/badge/Sponsor-ICSLabOrganization/SOTA_CV App-blue?logo=github-sponsors&style=for-the-badge&color=red">
 </a>
 
-<!-- LINK TO YOUR DONATING PAGES HERE -->
-
----
-
-SOTA_CV-App was generated from *[Josee9988/project-template](https://github.com/Josee9988/project-template)* 📚
-
 ---
 
 ## 🕵️ Extra recommendations
 
-* <!-- If you recommend installing anything special, or if you recommend using X thing for the good use of your project...-->
+* 
 
 ---
 
@@ -108,7 +114,3 @@ Enjoy! 😃
 See the license in the '**[LICENSE](LICENSE)**' file.
 
 Watch the changes in the '**[CHANGELOG.md](CHANGELOG.md)**' file.
-
----
-
-_Made with a lot of ❤️❤️ by **[@ICSLabOrganization](https://github.com/ICSLabOrganization)**_
