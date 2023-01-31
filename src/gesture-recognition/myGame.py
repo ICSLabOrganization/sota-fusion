@@ -5,11 +5,11 @@ import time
 
 class myGame():
     def __init__(self):
-        self.pose = myPose()
-        self.game_started = False
-        self.x_position = 1 
-        self.y_position = 1 # 0: Down, 1: Stand, 2: Jump
-        self.clap_duration = 0 
+        self.pose           = myPose()
+        self.game_started   = False
+        self.x_position     = 1
+        self.y_position     = 1 # 0: Down, 1: Stand, 2: Jump
+        self.clap_duration  = 0
 
     def move_LRC(self, LRC):
         if LRC=="L":
@@ -42,15 +42,15 @@ class myGame():
 
     def play(self):
         # Khoi tao camera
-        cap = cv2.VideoCapture(0)
-        start = time.time()
-        fc = 0
-        display_time = 0.1
-        fps = 0
+        cap             = cv2.VideoCapture(0)
+        start           = time.time()
+        fc              = 0
+        display_time    = 0.1
+        fps             = 0
         cap.set(3, 1280)
         cap.set(4, 960)
 
-        while True:
+        while True      : 
             ret, image = cap.read()
             fc += 1
             if ret:
