@@ -1,9 +1,10 @@
-wheel
-setuptools
-mypy
-pytest
+mypy==0.991
+pytest==7.2.1
 
-isort
-black
-flake8
-pre-commit
+pre-commit==3.0.2
+#isort
+#black
+#flake8
+
+#update requirements.txt
+pipreqs==0.4.11
