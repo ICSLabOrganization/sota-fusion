@@ -1,0 +1,9 @@
+wheel
+setuptools
+mypy
+pytest
+
+isort
+black
+flake8
+pre-commit
