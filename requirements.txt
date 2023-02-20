@@ -1,5 +1,11 @@
+datasets==2.9.0
 mediapipe==0.9.1.0
+numpy==1.24.2
 Pillow==9.4.0
 pyautogui==0.9.53
 PySimpleGUI==4.60.4
-
+PyYAML==6.0
+soundfile==0.12.1
+stability_sdk==0.3.2
+torch==1.13.1
+transformers==4.26.1
