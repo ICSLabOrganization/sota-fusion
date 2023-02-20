@@ -8,6 +8,12 @@ stab = Stability()
 def engToImg(str) :
     stab.generateImage(str)
 
+
+
+# --------------------------------------------- test --------------------------------------------
+
+# engToImg("green fur cats")
+
 # class MainWindow(qtw.QWidget) :
 #     def __init__(self):
 #         super().__init__()

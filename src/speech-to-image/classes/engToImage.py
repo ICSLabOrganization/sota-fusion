@@ -7,9 +7,25 @@ import numpy as np
 from stability_sdk import client
 import stability_sdk.interfaces.gooseai.generation.generation_pb2 as generation
 
+from pathlib import Path, PurePath
+import yaml
+
+
+# get current file path
+DIR_PATH = Path(__file__).parent.absolute().joinpath("classes")
+
+CONFIG_PATH = DIR_PATH.parent.absolute().joinpath("config.yml")
+
+# TODO: check path is exists
+# read config file
+with open(CONFIG_PATH, "r") as config_file:
+    config = yaml.safe_load(config_file)
+
 class Stability :
-    os.environ['STABILITY_HOST'] = 'grpc.stability.ai:443'
-    os.environ['STABILITY_KEY'] = 'sk-ILR5A3LYbmvocBSM5pcJpq3vFCQrMcOgGB9onIKN8V15lZxx'
+    # os.environ['STABILITY_HOST'] = 'grpc.stability.ai:443'
+    # os.environ['STABILITY_KEY'] = 'sk-ILR5A3LYbmvocBSM5pcJpq3vFCQrMcOgGB9onIKN8V15lZxx'
+    os.environ['STABILITY_KEY'] = config["engToImage"]["STAB_KEY"]
+    os.environ['STABILITY_HOST'] = config["engToImage"]["STAB_HOST"]
     stability_api = client.StabilityInference(
         key=os.environ['STABILITY_KEY'], # API Key reference.
         verbose=True, # Print debug messages.

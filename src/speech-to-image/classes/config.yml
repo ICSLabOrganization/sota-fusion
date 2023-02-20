@@ -1,0 +1,8 @@
+engToImage :
+  STAB_HOST : "grpc.stability.ai:443"
+  STAB_KEY  : "sk-ILR5A3LYbmvocBSM5pcJpq3vFCQrMcOgGB9onIKN8V15lZxx"
+
+LIB :
+  TRANSLATOR : "vinai/vinai-translate-vi2en"
+  RECOGNIZER : "nguyenvulebinh/wav2vec2-base-vietnamese-250h"
+

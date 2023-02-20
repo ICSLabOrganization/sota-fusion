@@ -1,8 +1,21 @@
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
+from pathlib import Path, PurePath
+import yaml
+
+# get current file path
+DIR_PATH = Path(__file__).parent.absolute().joinpath("classes")
+
+CONFIG_PATH = DIR_PATH.parent.absolute().joinpath("config.yml")
+
+# TODO: check path is exists
+# read config file
+with open(CONFIG_PATH, "r") as config_file:
+    config = yaml.safe_load(config_file)
+
 class VietToEng :
-    tokenizer_vi2en = AutoTokenizer.from_pretrained("vinai/vinai-translate-vi2en", src_lang="vi_VN")
-    model_vi2en = AutoModelForSeq2SeqLM.from_pretrained("vinai/vinai-translate-vi2en")
+    tokenizer_vi2en = AutoTokenizer.from_pretrained(config["LIB"]["TRANSLATOR"], src_lang="vi_VN")
+    model_vi2en = AutoModelForSeq2SeqLM.from_pretrained(config["LIB"]["TRANSLATOR"])
 
     def translate_vi2en(self, vi_text: str) -> str:
         input_ids = self.tokenizer_vi2en(vi_text, return_tensors="pt").input_ids
