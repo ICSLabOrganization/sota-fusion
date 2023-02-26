@@ -76,7 +76,7 @@ def convert_to_bytes(file_or_bytes, resize=None, fill=False):
             dataBytesIO = io.BytesIO(file_or_bytes)
             img = PIL.Image.open(dataBytesIO)
 
-    cur_width, cur_height = img.size
+    # cur_width, cur_height = img.size
     if resize:
         width, height = resize
         img = PIL.ImageOps.pad(img, (width, height), color=(255, 255, 255))
@@ -98,13 +98,11 @@ def make_main_window():
     layout = [
         [sg.Button(image_filename=SETTINGS_BTN, image_subsample=10)],
         # components centered
-        [sg.VPush()],
         [
             sg.Push(),
-            sg.Column(column_centered, element_justification="c"),
+            sg.Column(column_centered, element_justification="center"),
             sg.Push(),
         ],
-        [sg.VPush()],
         [
             sg.Button(key=key, expand_x=True, expand_y=True)
             for key in btn_dict.keys()

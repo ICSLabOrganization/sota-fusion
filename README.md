@@ -1,4 +1,4 @@
-# 🔥 **SOTA_CV-App**
+# 🔥 **sota-fusion**
 
 <div align="center">
   <!-- Change your logo -->

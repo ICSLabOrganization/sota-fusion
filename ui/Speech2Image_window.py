@@ -32,14 +32,21 @@ DELETE_BTN = DIR_PATH.joinpath("delete_button.png")
 
 
 def make_Speech2Image_window():
-    layout = [
-        [sg.Button(key="-EXIT-")],
-        [sg.Multiline(s=(30, 3), expand_x=True)],
+    column_rightAligned = [
         [
             sg.Button(key="-RECORD-"),
             sg.Button(key="-DELETE-"),
+        ]
+    ]
+
+    layout = [
+        [sg.Button(key="-EXIT-")],
+        [sg.Multiline(s=(30, 4), expand_x=True)],
+        [
+            sg.Push(),
+            sg.Column(column_rightAligned, element_justification="right"),
         ],
-        [sg.Image(key="-RESULT_IMAGE-")],
+        [sg.Image(key="-RESULT_IMAGE-", expand_x=True, expand_y=True)],
     ]
 
     return sg.Window(
