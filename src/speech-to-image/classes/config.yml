@@ -1,6 +1,6 @@
 engToImage :
   STAB_HOST : "grpc.stability.ai:443"
-  STAB_KEY  : "sk-ILR5A3LYbmvocBSM5pcJpq3vFCQrMcOgGB9onIKN8V15lZxx"
+  STAB_KEY  : "sk-cHfjUwInF8Uuds4AS77mGm3HQWuwXkl5N64o6XwfxkKVcWRh"
 
 LIB :
   TRANSLATOR : "vinai/vinai-translate-vi2en"

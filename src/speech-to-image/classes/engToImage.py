@@ -14,6 +14,8 @@ import yaml
 # get current file path
 DIR_PATH = Path(__file__).parent.absolute().joinpath("classes")
 
+IMG_PATH = DIR_PATH.parent.absolute().joinpath("root.png")
+
 CONFIG_PATH = DIR_PATH.parent.absolute().joinpath("config.yml")
 
 # TODO: check path is exists
@@ -24,6 +26,7 @@ with open(CONFIG_PATH, "r") as config_file:
 class Stability :
     # os.environ['STABILITY_HOST'] = 'grpc.stability.ai:443'
     # os.environ['STABILITY_KEY'] = 'sk-ILR5A3LYbmvocBSM5pcJpq3vFCQrMcOgGB9onIKN8V15lZxx'
+    # os.environ['STABILITY_KEY'] = 'sk-cHfjUwInF8Uuds4AS77mGm3HQWuwXkl5N64o6XwfxkKVcWRh'
     os.environ['STABILITY_KEY'] = config["engToImage"]["STAB_KEY"]
     os.environ['STABILITY_HOST'] = config["engToImage"]["STAB_HOST"]
     stability_api = client.StabilityInference(
@@ -62,9 +65,9 @@ class Stability :
                 if artifact.type == generation.ARTIFACT_IMAGE:
                     img = Image.open(io.BytesIO(artifact.binary))
                     # img.save(str(artifact.seed)+ ".png") # Save our generated images with their seed number as the filename.
-                    img.save("root.png")
+                    img.save(IMG_PATH)
                     # mask = np.array(img.convert('L'))
                     # print(mask)
-                    return "root.png"
+                    return IMG_PATH
                     # img.show()
                     # return img

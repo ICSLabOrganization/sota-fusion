@@ -12,7 +12,7 @@ def engToImg(str) :
 
 # --------------------------------------------- test --------------------------------------------
 
-# engToImg("green fur cats")
+# engToImg("green cats ")
 
 # class MainWindow(qtw.QWidget) :
 #     def __init__(self):
