@@ -1,11 +1,11 @@
-from transformers import Wav2Vec2Processor, Wav2Vec2ForCTC
-from datasets import load_dataset
+from pathlib import Path, PurePath
+
+import librosa
 import soundfile as sf
 import torch
-import librosa
-
-from pathlib import Path, PurePath
 import yaml
+from datasets import load_dataset
+from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
 
 # get current file path
 DIR_PATH = Path(__file__).parent.absolute().joinpath("classes")
@@ -17,7 +17,8 @@ CONFIG_PATH = DIR_PATH.parent.absolute().joinpath("config.yml")
 with open(CONFIG_PATH, "r") as config_file:
     config = yaml.safe_load(config_file)
 
-class SpeechToViet :
+
+class SpeechToViet:
 
     # load model and tokenizer
     processor = Wav2Vec2Processor.from_pretrained(config["LIB"]["RECOGNIZER"])
@@ -38,7 +39,9 @@ class SpeechToViet :
         y, ds = librosa.load(fileLink, sr=16000)
 
         # tokenize
-        input_values = self.processor(y, return_tensors="pt", padding="longest").input_values  # Batch size 1
+        input_values = self.processor(
+            y, return_tensors="pt", padding="longest"
+        ).input_values  # Batch size 1
 
         # retrieve logits
         logits = self.model(input_values).logits
@@ -47,5 +50,6 @@ class SpeechToViet :
         predicted_ids = torch.argmax(logits, dim=-1)
         transcription = self.processor.batch_decode(predicted_ids)
         return transcription[0]
+
 
 # print(transcription[0])
