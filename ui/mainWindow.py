@@ -12,6 +12,8 @@ from tkinter import Canvas, PhotoImage, Tk
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH.joinpath("assets").joinpath("mainWindow")
 
+introduction_font = "Caladea"
+introduction_fontSize = 20
 
 def relative_to_assets(path: str):
     return PhotoImage(file=(ASSETS_PATH / Path(path)))
@@ -99,7 +101,7 @@ canvas.create_text(
     anchor="nw",
     text="Welcome to sota-fusion",
     fill="#FCFCFC",
-    font=("Roboto Bold", 24 * -1),
+    font=("Roboto Medium", 24 * -1),
 )
 
 canvas.create_text(
@@ -108,7 +110,7 @@ canvas.create_text(
     anchor="nw",
     text="Please select mode",
     fill="#505485",
-    font=("Roboto Bold", 24 * -1),
+    font=("Roboto Medium", 24 * -1),
 )
 
 canvas.create_rectangle(40.0, 160.0, 100.0, 165.0, fill="#FCFCFC", outline="")
@@ -119,7 +121,7 @@ canvas.create_text(
     anchor="nw",
     text="one. ",
     fill="#FCFCFC",
-    font=("ABeeZee Regular", 24 * -1),
+    font=(introduction_font, introduction_fontSize * -1),
 )
 
 canvas.create_text(
@@ -128,7 +130,7 @@ canvas.create_text(
     anchor="nw",
     text="technologies into only ",
     fill="#FCFCFC",
-    font=("ABeeZee Regular", 24 * -1),
+    font=(introduction_font, introduction_fontSize * -1),
 )
 
 canvas.create_text(
@@ -137,7 +139,7 @@ canvas.create_text(
     anchor="nw",
     text="computer vision ",
     fill="#FCFCFC",
-    font=("ABeeZee Regular", 24 * -1),
+    font=(introduction_font, introduction_fontSize * -1),
 )
 
 canvas.create_text(
@@ -146,7 +148,7 @@ canvas.create_text(
     anchor="nw",
     text="many state-of-the-art",
     fill="#FCFCFC",
-    font=("ABeeZee Regular", 24 * -1),
+    font=(introduction_font, introduction_fontSize * -1),
 )
 
 canvas.create_text(
@@ -155,7 +157,7 @@ canvas.create_text(
     anchor="nw",
     text="application combining",
     fill="#FCFCFC",
-    font=("ABeeZee Regular", 24 * -1),
+    font=(introduction_font, introduction_fontSize * -1),
 )
 
 canvas.create_text(
@@ -164,7 +166,7 @@ canvas.create_text(
     anchor="nw",
     text="sota-fusion is an",
     fill="#FCFCFC",
-    font=("ABeeZee Regular", 24 * -1),
+    font=(introduction_font, introduction_fontSize * -1),
 )
 ########################static gui##############################
 
