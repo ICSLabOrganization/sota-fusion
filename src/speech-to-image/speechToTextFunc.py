@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from classes.engToImage import Stability
+# from classes.engToImage import Stability
 from classes.speechToViet import SpeechToViet
-from classes.vietToEng import VietToEng
+# from classes.vietToEng import VietToEng
 
 # import vietToEngFunc
 # import engToImgFunc
@@ -24,8 +24,8 @@ def testspeech(file: str) -> str:
 # print(vietToEngFunc.translate(testspeech(AUDIO_PATH)))
 # print(testspeech(AUDIO_PATH))
 
-enToImg = Stability()
-viToEn = VietToEng()
+# enToImg = Stability()
+# viToEn = VietToEng()
 
 step1 = testspeech(AUDIO_PATH)
 print(step1)
