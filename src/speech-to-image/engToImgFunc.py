@@ -2,12 +2,12 @@
 # import PyQt5.QtGui as qtg
 from classes.engToImage import Stability
 
-font = 'Verdana'
+font = "Verdana"
 stab = Stability()
 
-def engToImg(str) :
-    stab.generateImage(str)
 
+def engToImg(str):
+    stab.generateImage(str)
 
 
 # --------------------------------------------- test --------------------------------------------
@@ -49,7 +49,7 @@ def engToImg(str) :
 
 #         image_zone = qtw.QLabel(self)
 #         image_zone.move(0, 44)
-        
+
 #         self.show()
 
 #         def outputImage() :
@@ -64,7 +64,7 @@ def engToImg(str) :
 #             # first_image.setPixmap(pixmap)
 #             # second_image.setPixmap(pixmap)
 #             image_zone.setPixmap(pixmap)
-            
+
 #             # image_zone.addWidget(first_image)
 #             # image_zone.addWidget(second_image)
 #             self.layout().addWidget(image_zone)

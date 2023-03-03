@@ -1,10 +1,12 @@
-from classes.speechToViet import SpeechToViet
+from pathlib import Path
+
 from classes.engToImage import Stability
+from classes.speechToViet import SpeechToViet
 from classes.vietToEng import VietToEng
+
 # import vietToEngFunc
 # import engToImgFunc
 
-from pathlib import Path
 
 DIR_PATH = Path(__file__).parent.absolute().joinpath("speech-to-image")
 
@@ -14,8 +16,10 @@ AUDIO_PATH = DIR_PATH.parent.absolute().joinpath("audio-test").joinpath("output.
 
 speech = SpeechToViet()
 
-def testspeech(file : str) -> str:
+
+def testspeech(file: str) -> str:
     return speech.loadSpeech(file)
+
 
 # print(vietToEngFunc.translate(testspeech(AUDIO_PATH)))
 # print(testspeech(AUDIO_PATH))
