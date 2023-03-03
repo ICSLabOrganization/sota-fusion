@@ -8,7 +8,7 @@ from pathlib import Path
 
 DIR_PATH = Path(__file__).parent.absolute().joinpath("speech-to-image")
 
-AUDIO_PATH = DIR_PATH.parent.absolute().joinpath("audio-test").joinpath("test.mp3")
+AUDIO_PATH = DIR_PATH.parent.absolute().joinpath("audio-test").joinpath("output.wav")
 # AUDIO_PATH = AUDIO_PATH.joinpath("test.mp3")
 # print(AUDIO_PATH)
 
@@ -26,8 +26,8 @@ viToEn = VietToEng()
 step1 = testspeech(AUDIO_PATH)
 print(step1)
 
-step2 = viToEn.translate_vi2en(step1)
-print(step2)
+# step2 = viToEn.translate_vi2en(step1)
+# print(step2)
 
 
-enToImg.generateImage(step2)
+# enToImg.generateImage(step2)

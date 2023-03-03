@@ -4,5 +4,5 @@ engToImage :
 
 LIB :
   TRANSLATOR : "vinai/vinai-translate-vi2en"
-  RECOGNIZER : "nguyenvulebinh/wav2vec2-base-vietnamese-250h"
+  RECOGNIZER : "wav2vec2-base-vietnamese-250h"
 

@@ -12,6 +12,8 @@ DIR_PATH = Path(__file__).parent.absolute().joinpath("classes")
 
 CONFIG_PATH = DIR_PATH.parent.absolute().joinpath("config.yml")
 
+
+
 # TODO: check path is exists
 # read config file
 with open(CONFIG_PATH, "r") as config_file:
