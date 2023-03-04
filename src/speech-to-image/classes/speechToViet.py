@@ -12,6 +12,8 @@ DIR_PATH = Path(__file__).parent.absolute().joinpath("classes")
 
 CONFIG_PATH = DIR_PATH.parent.absolute().joinpath("config.yml")
 
+LIB_PATH = DIR_PATH.parent.absolute().joinpath("wav2vec2-base-vietnamese-250h")
+
 # TODO: check path is exists
 # read config file
 with open(CONFIG_PATH, "r") as config_file:
@@ -21,8 +23,8 @@ with open(CONFIG_PATH, "r") as config_file:
 class SpeechToViet:
 
     # load model and tokenizer
-    processor = Wav2Vec2Processor.from_pretrained(config["LIB"]["RECOGNIZER"])
-    model = Wav2Vec2ForCTC.from_pretrained(config["LIB"]["RECOGNIZER"])
+    processor = Wav2Vec2Processor.from_pretrained(LIB_PATH)
+    model = Wav2Vec2ForCTC.from_pretrained(LIB_PATH)
 
     # define function to read in sound file
     def map_to_array(batch):
