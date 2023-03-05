@@ -11,19 +11,22 @@ Copyright (c) 2023 Your Company
 from __future__ import absolute_import, division, print_function
 
 from pathlib import Path
-
-# Explicit imports to satisfy Flake8
-from tkinter import Canvas, PhotoImage, Tk
+from tkinter import Canvas, PhotoImage, Tk, Toplevel
 
 from PIL import Image, ImageEnhance, ImageTk
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH.joinpath("assets")
 
+class StyleTransfer_window:
+    def __init__(self, master):
+        self.master = master
+        self.window = Toplevel(self.master)
+        self.window.resizable(False, False)
 
-class StyleTransfer:
-    def __init__(self):
-        # replace current window with new window
+        #get close event 
+        self.window.protocol("WM_DELETE_WINDOW", self.__on_closing)
+
+        OUTPUT_PATH = Path(__file__).parent
+        self.ASSETS_PATH = OUTPUT_PATH.joinpath("assets")
 
         # content, style and result image
         self.img_content_PIL = Image.open(
@@ -33,12 +36,16 @@ class StyleTransfer:
             self.__relative_to_assets("style-transfer", "init_style.png")
         )
 
-    def __call__(self):
-        # initial static GUI
-        window = Tk()
+        self.__static_ui()
+        self.__binding_button()
 
-        window.geometry("862x519")
-        window.configure(bg="#0F1A2C")
+    def __on_closing(self):
+        self.master.destroy()
+
+    def __static_ui(self):
+        # initial static GUI
+        self.window.geometry("862x519")
+        self.window.configure(bg="#0F1A2C")
 
         # image button deactive and active
         self.img_btnGenerate = PhotoImage(
@@ -66,17 +73,17 @@ class StyleTransfer:
         self.img_style = ImageTk.PhotoImage(self.img_style_PIL)
 
         # frames of loading gif
-        frame_count = 8  # magic number
+        _frame_count = 8  # magic number
         self.loading_frames = [
             PhotoImage(
                 file=self.__relative_to_assets("loading_animation.gif"),
                 format="gif -index %i" % (i),
             )
-            for i in range(frame_count)
+            for i in range(_frame_count)
         ]
 
         self.canvas = Canvas(
-            window,
+            self.window,
             bg="#0F1A2C",
             height=519,
             width=862,
@@ -137,38 +144,41 @@ class StyleTransfer:
         self.canvas.itemconfig(self.text_styleImg_canvas, state="hidden")
         self.canvas.itemconfig(self.loadingAnimation_canvas, state="hidden")
 
+    def __binding_button(self):
         # binding event for button
         self.canvas.tag_bind(
-            self.buttonGenerate_canvas,
+            self.buttonBack_canvas,
             "<Button-1>",
             lambda event: self.__get_click_event(ID=0, event=str(event)),
         )
         self.canvas.tag_bind(
-            self.buttonGenerate_canvas,
+            self.buttonBack_canvas,
             "<Enter>",
             lambda event: self.__get_moveOver_event(ID=0, event=str(event)),
         )
         self.canvas.tag_bind(
-            self.buttonGenerate_canvas,
+            self.buttonBack_canvas,
             "<Leave>",
             lambda event: self.__get_moveOver_event(ID=0, event=str(event)),
         )
 
+
         self.canvas.tag_bind(
-            self.buttonBack_canvas,
+            self.buttonGenerate_canvas,
             "<Button-1>",
             lambda event: self.__get_click_event(ID=1, event=str(event)),
         )
         self.canvas.tag_bind(
-            self.buttonBack_canvas,
+            self.buttonGenerate_canvas,
             "<Enter>",
             lambda event: self.__get_moveOver_event(ID=1, event=str(event)),
         )
         self.canvas.tag_bind(
-            self.buttonBack_canvas,
+            self.buttonGenerate_canvas,
             "<Leave>",
             lambda event: self.__get_moveOver_event(ID=1, event=str(event)),
         )
+
 
         self.canvas.tag_bind(
             self.image_content_canvas,
@@ -186,6 +196,7 @@ class StyleTransfer:
             lambda event: self.__get_moveOver_event(ID=2, event=str(event)),
         )
 
+
         self.canvas.tag_bind(
             self.image_style_canvas,
             "<Button-1>",
@@ -201,10 +212,6 @@ class StyleTransfer:
             "<Leave>",
             lambda event: self.__get_moveOver_event(ID=3, event=str(event)),
         )
-
-        # create window
-        window.resizable(False, False)
-        window.mainloop()
 
     def __update_animation(self, idx: int):
         current_frame = self.loading_frames[idx]
@@ -226,11 +233,23 @@ class StyleTransfer:
             else:
                 RELATIVE_PATH = RELATIVE_PATH / Path(arg)
 
-        return ASSETS_PATH / Path(RELATIVE_PATH)
+        return self.ASSETS_PATH / Path(RELATIVE_PATH)
 
     def __get_moveOver_event(self, ID: int, event: str):
         # use new_content_image, new_style_image as global variables
         if ID == 0:
+            if "Enter" in event:
+                self.canvas.itemconfig(
+                    self.buttonBack_canvas, image=self.img_btnBack_enabled
+                )
+            elif "Leave" in event:
+                self.canvas.itemconfig(
+                    self.buttonBack_canvas, image=self.img_btnBack
+                )
+            else:
+                return
+            
+        elif ID == 1:
             if "Enter" in event:
                 self.canvas.itemconfig(
                     self.buttonGenerate_canvas,
@@ -239,18 +258,6 @@ class StyleTransfer:
             elif "Leave" in event:
                 self.canvas.itemconfig(
                     self.buttonGenerate_canvas, image=self.img_btnGenerate
-                )
-            else:
-                return
-
-        elif ID == 1:
-            if "Enter" in event:
-                self.canvas.itemconfig(
-                    self.buttonBack_canvas, image=self.img_btnBack_enabled
-                )
-            elif "Leave" in event:
-                self.canvas.itemconfig(
-                    self.buttonBack_canvas, image=self.img_btnBack
                 )
             else:
                 return
@@ -265,7 +272,7 @@ class StyleTransfer:
             self.canvas.itemconfig(
                 self.image_content_canvas, image=self.new_content_image
             )
-            return
+            
 
         elif ID == 3:
             self.new_style_image = self.__get_movingOver_image(
@@ -277,7 +284,7 @@ class StyleTransfer:
             self.canvas.itemconfig(
                 self.image_style_canvas, image=self.new_style_image
             )
-            return
+            
 
         else:
             return
@@ -302,6 +309,11 @@ class StyleTransfer:
     # the function to call when button clicked
     def __get_click_event(self, ID: int, event=None):
         if ID == 0:
+            self.window.destroy()
+            # restore the main window
+            self.master.deiconify()
+
+        elif ID == 1:
             self.canvas.itemconfig(
                 self.buttonGenerate_canvas, image=self.img_btnGenerate_loading
             )
@@ -309,15 +321,16 @@ class StyleTransfer:
             self.canvas.itemconfig(
                 self.loadingAnimation_canvas, state="normal"
             )
-
-        print("clicked")
-        return
+            
+        
+        print(ID)
+        
 
 
 def main():
-    styleTransfer_window = StyleTransfer()
-    styleTransfer_window()
-
+    root = Tk()
+    mainWindow = StyleTransfer_window(root)
+    root.mainloop()
 
 if __name__ == "__main__":
     main()

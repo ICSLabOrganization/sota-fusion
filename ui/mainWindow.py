@@ -11,243 +11,273 @@ Copyright (c) 2023 ICSLab
 from __future__ import absolute_import, division, print_function
 
 from pathlib import Path
-
-# Explicit imports to satisfy Flake8
 from tkinter import Canvas, PhotoImage, Tk
 
-# TODO: use class instead function
+from style_transfer import StyleTransfer_window
+from speech2image import Speech2Image_window
 
+class MainWindow:
+    def __init__(self, master):
+        self.window = master
+        self.window.resizable(False, False)
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH.joinpath("assets").joinpath("mainWindow")
+        # replace current window with new window
+        OUTPUT_PATH = Path(__file__).parent
+        self.ASSETS_PATH = OUTPUT_PATH.joinpath("assets").joinpath("mainWindow")
+        
+        self.__static_ui()
+        self.__binding_button()
 
-introduction_font = "Caladea"
-introduction_fontSize = 20
+    def __static_ui(self):
+        _introduction_font = "Caladea"
+        _introduction_fontSize = 20
 
+        # initial static GUI
+        self.window.geometry("862x519")
+        self.window.configure(bg="#3A7FF6")
 
-def relative_to_assets(path: str):
-    return PhotoImage(file=(ASSETS_PATH / Path(path)))
+        # image background
+        _img_bg = self.__relative_to_assets("bg.png")
+        _img_bg_playDinosaurGame = self.__relative_to_assets("bg_play-dinosaur-game.png")
+        _img_bg_styleTransfer = self.__relative_to_assets("bg_style-transfer.png")
+        _img_bg_speech2image = self.__relative_to_assets("bg_speech2image.png")
 
+        # image button deactive
+        _img_btn_playDinosaurGame = self.__relative_to_assets("btn_play-dinosaur-game.png")
+        _img_btn_styleTransfer = self.__relative_to_assets("btn_style-transfer.png")
+        _img_btn_speech2image = self.__relative_to_assets("btn_speech2image.png")
 
-def get_moveOver_event(ID: int, event: str):
-    if "Enter" in event:
-        canvas.itemconfig(bg, image=switcher[ID]["background_img"])
-        canvas.itemconfig(
-            switcher[ID]["btn_obj"], image=switcher[ID]["button_img"]
+        # image button active
+        _img_btn_playDinosaurGame_enabled = self.__relative_to_assets(
+            "btn_play-dinosaur-game_enabled.png"
+        )
+        _img_btn_styleTransfer_enabled = self.__relative_to_assets(
+            "btn_style-transfer_enabled.png"
+        )
+        _img_btn_speech2image_enabled = self.__relative_to_assets(
+            "btn_speech2image_enabled.png"
         )
 
-    elif "Leave" in event:
-        canvas.itemconfig(bg, image=switcher[0]["background_img"])
-        canvas.itemconfig(
-            switcher[ID]["btn_obj"], image=switcher[0]["button_img"][ID - 1]
+        self.canvas = Canvas(
+            self.window,
+            bg="#3A7FF6",
+            height=519,
+            width=862,
+            bd=0,
+            highlightthickness=0,
+            relief="ridge",
         )
 
-    else:
-        pass
+        self.canvas.place(x=0, y=0)
+        self.bg = self.canvas.create_image(646.0, 259.0, image=_img_bg)
+
+        self.btn_speech2image = self.canvas.create_image(
+            646.0, 423.0, image=_img_btn_speech2image
+        )
+
+        self.btn_styleTransfer = self.canvas.create_image(
+            646.0, 312.0, image=_img_btn_styleTransfer
+        )
+
+        self.btn_playDinosaurGame = self.canvas.create_image(
+            646.0, 201.0, image=_img_btn_playDinosaurGame
+        )
+
+        self.canvas.create_text(
+            40.0,
+            127.0,
+            anchor="nw",
+            text="Welcome to sota-fusion",
+            fill="#FCFCFC",
+            font=("Roboto Medium", 24 * -1),
+        )
+
+        self.canvas.create_text(
+            541.0,
+            87.0,
+            anchor="nw",
+            text="Please select mode",
+            fill="#505485",
+            font=("Roboto Medium", 24 * -1),
+        )
+
+        self.canvas.create_rectangle(40.0, 160.0, 100.0, 165.0, fill="#FCFCFC", outline="")
+
+        self.canvas.create_text(
+            40.0,
+            335.0,
+            anchor="nw",
+            text="one. ",
+            fill="#FCFCFC",
+            font=(_introduction_font, _introduction_fontSize * -1),
+        )
+
+        self.canvas.create_text(
+            40.0,
+            302.0,
+            anchor="nw",
+            text="technologies into only ",
+            fill="#FCFCFC",
+            font=(_introduction_font, _introduction_fontSize * -1),
+        )
+
+        self.canvas.create_text(
+            40.0,
+            269.0,
+            anchor="nw",
+            text="computer vision ",
+            fill="#FCFCFC",
+            font=(_introduction_font, _introduction_fontSize * -1),
+        )
+
+        self.canvas.create_text(
+            40.0,
+            236.0,
+            anchor="nw",
+            text="many state-of-the-art",
+            fill="#FCFCFC",
+            font=(_introduction_font, _introduction_fontSize * -1),
+        )
+
+        self.canvas.create_text(
+            40.0,
+            203.0,
+            anchor="nw",
+            text="application combining",
+            fill="#FCFCFC",
+            font=(_introduction_font, _introduction_fontSize * -1),
+        )
+
+        self.canvas.create_text(
+            40.0,
+            170.0,
+            anchor="nw",
+            text="sota-fusion is an",
+            fill="#FCFCFC",
+            font=(_introduction_font, _introduction_fontSize * -1),
+        )
+
+        self.switcher = {
+            0: {
+                "background_img": _img_bg,
+                "button_img": [
+                    _img_btn_playDinosaurGame,
+                    _img_btn_styleTransfer,
+                    _img_btn_speech2image,
+                ],
+            },
+            1: {
+                "btn_obj": self.btn_playDinosaurGame,
+                "background_img": _img_bg_playDinosaurGame,
+                "button_img": _img_btn_playDinosaurGame_enabled,
+            },
+            2: {
+                "btn_obj": self.btn_styleTransfer,
+                "background_img": _img_bg_styleTransfer,
+                "button_img": _img_btn_styleTransfer_enabled,
+            },
+            3: {
+                "btn_obj": self.btn_speech2image,
+                "background_img": _img_bg_speech2image,
+                "button_img": _img_btn_speech2image_enabled,
+            },
+        }
+
+    def __binding_button(self):
+        # binding event for button
+        self.canvas.tag_bind(
+            self.btn_playDinosaurGame, "<Button-1>", lambda event: self.__get_click_event(ID=1)
+        )
+        self.canvas.tag_bind(
+            self.btn_playDinosaurGame,
+            "<Enter>",
+            lambda event: self.__get_moveOver_event(ID=1, event=str(event)),
+        )
+        self.canvas.tag_bind(
+            self.btn_playDinosaurGame,
+            "<Leave>",
+            lambda event: self.__get_moveOver_event(ID=1, event=str(event)),
+        )
+
+        self.canvas.tag_bind(
+            self.btn_styleTransfer, "<Button-1>", lambda event: self.__get_click_event(ID=2)
+        )
+        self.canvas.tag_bind(
+            self.btn_styleTransfer,
+            "<Enter>",
+            lambda event: self.__get_moveOver_event(ID=2, event=str(event)),
+        )
+        self.canvas.tag_bind(
+            self.btn_styleTransfer,
+            "<Leave>",
+            lambda event: self.__get_moveOver_event(ID=2, event=str(event)),
+        )
+
+        self.canvas.tag_bind(
+            self.btn_speech2image, "<Button-1>", lambda event: self.__get_click_event(ID=3)
+        )
+        self.canvas.tag_bind(
+            self.btn_speech2image,
+            "<Enter>",
+            lambda event: self.__get_moveOver_event(ID=3, event=str(event)),
+        )
+        self.canvas.tag_bind(
+            self.btn_speech2image,
+            "<Leave>",
+            lambda event: self.__get_moveOver_event(ID=3, event=str(event)),
+        )
+
+    def __relative_to_assets(self, *args: str) -> Path:
+        RELATIVE_PATH = None
+
+        for arg in args:
+            if RELATIVE_PATH is None:
+                RELATIVE_PATH = Path(arg)
+            else:
+                RELATIVE_PATH = RELATIVE_PATH / Path(arg)
+
+        return PhotoImage(file=self.ASSETS_PATH / Path(RELATIVE_PATH))
+
+    def __get_moveOver_event(self, ID: int, event: str):
+        if "Enter" in event:
+            self.canvas.itemconfig(self.bg, image=self.switcher[ID]["background_img"])
+            self.canvas.itemconfig(
+                self.switcher[ID]["btn_obj"], image=self.switcher[ID]["button_img"]
+            )
+            
+        
+        elif "Leave" in event:
+            self.canvas.itemconfig(self.bg, image=self.switcher[0]["background_img"])
+            self.canvas.itemconfig(
+                self.switcher[ID]["btn_obj"], image=self.switcher[0]["button_img"][ID - 1]
+            )
+            
+        else:
+            return
+
+    # the function to call when button clicked
+    def __get_click_event(self, ID: int, event=None):
+        self.window.withdraw()
+        #open another window
+        if ID == 2:
+            self.sub_window = StyleTransfer_window(self.window)
+
+        elif ID == 3:
+            self.sub_window = Speech2Image_window(self.window)
+            
+        print(ID)
+def main():
+    root = Tk()
+    mainWindow = MainWindow(root)
+    root.mainloop()
+
+if __name__ == "__main__":
+    main()
 
 
-# the function to call when button clicked
-def get_click_event(ID: int, event=None):
-    print("clicked")
 
 
-########################static gui##############################
-window = Tk()
-
-window.geometry("862x519")
-window.configure(bg="#3A7FF6")
-
-# image background
-img_bg = relative_to_assets("bg.png")
-img_bg_playDinosaurGame = relative_to_assets("bg_play-dinosaur-game.png")
-img_bg_styleTransfer = relative_to_assets("bg_style-transfer.png")
-img_bg_speech2image = relative_to_assets("bg_speech2image.png")
-
-# image button deactive
-img_btn_playDinosaurGame = relative_to_assets("btn_play-dinosaur-game.png")
-img_btn_styleTransfer = relative_to_assets("btn_style-transfer.png")
-img_btn_speech2image = relative_to_assets("btn_speech2image.png")
-
-# image button active
-img_btn_playDinosaurGame_enabled = relative_to_assets(
-    "btn_play-dinosaur-game_enabled.png"
-)
-img_btn_styleTransfer_enabled = relative_to_assets(
-    "btn_style-transfer_enabled.png"
-)
-img_btn_speech2image_enabled = relative_to_assets(
-    "btn_speech2image_enabled.png"
-)
 
 
-canvas = Canvas(
-    window,
-    bg="#3A7FF6",
-    height=519,
-    width=862,
-    bd=0,
-    highlightthickness=0,
-    relief="ridge",
-)
 
-canvas.place(x=0, y=0)
-bg = canvas.create_image(646.0, 259.0, image=img_bg)
 
-btn_speech2image = canvas.create_image(
-    646.0, 423.0, image=img_btn_speech2image
-)
-
-btn_styleTransfer = canvas.create_image(
-    646.0, 312.0, image=img_btn_styleTransfer
-)
-
-btn_playDinosaurGame = canvas.create_image(
-    646.0, 201.0, image=img_btn_playDinosaurGame
-)
-
-canvas.create_text(
-    40.0,
-    127.0,
-    anchor="nw",
-    text="Welcome to sota-fusion",
-    fill="#FCFCFC",
-    font=("Roboto Medium", 24 * -1),
-)
-
-canvas.create_text(
-    541.0,
-    87.0,
-    anchor="nw",
-    text="Please select mode",
-    fill="#505485",
-    font=("Roboto Medium", 24 * -1),
-)
-
-canvas.create_rectangle(40.0, 160.0, 100.0, 165.0, fill="#FCFCFC", outline="")
-
-canvas.create_text(
-    40.0,
-    335.0,
-    anchor="nw",
-    text="one. ",
-    fill="#FCFCFC",
-    font=(introduction_font, introduction_fontSize * -1),
-)
-
-canvas.create_text(
-    40.0,
-    302.0,
-    anchor="nw",
-    text="technologies into only ",
-    fill="#FCFCFC",
-    font=(introduction_font, introduction_fontSize * -1),
-)
-
-canvas.create_text(
-    40.0,
-    269.0,
-    anchor="nw",
-    text="computer vision ",
-    fill="#FCFCFC",
-    font=(introduction_font, introduction_fontSize * -1),
-)
-
-canvas.create_text(
-    40.0,
-    236.0,
-    anchor="nw",
-    text="many state-of-the-art",
-    fill="#FCFCFC",
-    font=(introduction_font, introduction_fontSize * -1),
-)
-
-canvas.create_text(
-    40.0,
-    203.0,
-    anchor="nw",
-    text="application combining",
-    fill="#FCFCFC",
-    font=(introduction_font, introduction_fontSize * -1),
-)
-
-canvas.create_text(
-    40.0,
-    170.0,
-    anchor="nw",
-    text="sota-fusion is an",
-    fill="#FCFCFC",
-    font=(introduction_font, introduction_fontSize * -1),
-)
-########################static gui##############################
-
-switcher = {
-    0: {
-        "background_img": img_bg,
-        "button_img": [
-            img_btn_playDinosaurGame,
-            img_btn_styleTransfer,
-            img_btn_speech2image,
-        ],
-    },
-    1: {
-        "btn_obj": btn_playDinosaurGame,
-        "background_img": img_bg_playDinosaurGame,
-        "button_img": img_btn_playDinosaurGame_enabled,
-    },
-    2: {
-        "btn_obj": btn_styleTransfer,
-        "background_img": img_bg_styleTransfer,
-        "button_img": img_btn_styleTransfer_enabled,
-    },
-    3: {
-        "btn_obj": btn_speech2image,
-        "background_img": img_bg_speech2image,
-        "button_img": img_btn_speech2image_enabled,
-    },
-}
-
-# bind "button" image as real button
-canvas.tag_bind(
-    btn_playDinosaurGame, "<Button-1>", lambda event: get_click_event(ID=1)
-)
-canvas.tag_bind(
-    btn_playDinosaurGame,
-    "<Enter>",
-    lambda event: get_moveOver_event(ID=1, event=str(event)),
-)
-canvas.tag_bind(
-    btn_playDinosaurGame,
-    "<Leave>",
-    lambda event: get_moveOver_event(ID=1, event=str(event)),
-)
-
-canvas.tag_bind(
-    btn_styleTransfer, "<Button-1>", lambda event: get_click_event(ID=2)
-)
-canvas.tag_bind(
-    btn_styleTransfer,
-    "<Enter>",
-    lambda event: get_moveOver_event(ID=2, event=str(event)),
-)
-canvas.tag_bind(
-    btn_styleTransfer,
-    "<Leave>",
-    lambda event: get_moveOver_event(ID=2, event=str(event)),
-)
-
-canvas.tag_bind(
-    btn_speech2image, "<Button-1>", lambda event: get_click_event(ID=3)
-)
-canvas.tag_bind(
-    btn_speech2image,
-    "<Enter>",
-    lambda event: get_moveOver_event(ID=3, event=str(event)),
-)
-canvas.tag_bind(
-    btn_speech2image,
-    "<Leave>",
-    lambda event: get_moveOver_event(ID=3, event=str(event)),
-)
-
-window.resizable(False, False)
-window.mainloop()
