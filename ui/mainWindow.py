@@ -266,6 +266,7 @@ class MainWindow:
             self.sub_window = Speech2Image_window(self.window)
             
         print(ID)
+        
 def main():
     root = Tk()
     mainWindow = MainWindow(root)
