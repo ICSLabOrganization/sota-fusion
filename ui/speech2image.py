@@ -265,6 +265,7 @@ class Speech2Image_window:
 
 def main():
     root = Tk()
+    root.withdraw()
     mainWindow = Speech2Image_window(root)
     root.mainloop()
 

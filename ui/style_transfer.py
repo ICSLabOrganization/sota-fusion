@@ -329,6 +329,7 @@ class StyleTransfer_window:
 
 def main():
     root = Tk()
+    root.withdraw()
     mainWindow = StyleTransfer_window(root)
     root.mainloop()
 
