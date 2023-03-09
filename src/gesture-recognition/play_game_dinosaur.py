@@ -6,19 +6,8 @@ import pyautogui as ui
 import selenium
 from selenium import webdriver
 
-# def detectHand(img):
-#     mpHands = mp.solutions.hands
-#     hands = mpHands.Hands(mode = False, maxHands = 2, detectionCon = 0.5, trackCon = 0.5)
-#     mpDraw = mp.solutions.drawing_utils
+class 
 
-#     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-#     results = hands.process(img)
-
-#     if results.multi_hand_landmarks:
-#         for i in results.multi_hand_landmarks:
-#             mpDraw.draw_landmarks(img, i, mpHands.HAND_CONNECTIONS)
-
-#     return img
 path = "chromedriver"
 driver = webdriver.Chrome(path)
 driver.get("https://offline-dino-game.firebaseapp.com/")
