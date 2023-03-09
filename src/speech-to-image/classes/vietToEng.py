@@ -1,4 +1,4 @@
-from pathlib import Path, PurePath
+from pathlib import Path
 
 import yaml
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer

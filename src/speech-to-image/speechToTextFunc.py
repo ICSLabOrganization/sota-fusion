@@ -1,11 +1,7 @@
 from pathlib import Path
 
-# from classes.engToImage import Stability
 from classes.speechToViet import SpeechToViet
-# from classes.vietToEng import VietToEng
 
-# import vietToEngFunc
-# import engToImgFunc
 
 
 DIR_PATH = Path(__file__).parent.absolute().joinpath("speech-to-image")
