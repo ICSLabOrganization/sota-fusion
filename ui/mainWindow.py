@@ -22,8 +22,8 @@ class MainWindow:
         self.window.resizable(False, False)
 
         # replace current window with new window
-        OUTPUT_PATH = Path(__file__).parent
-        self.ASSETS_PATH = OUTPUT_PATH.joinpath("assets").joinpath("mainWindow")
+        PARENT_PATH = Path(__file__).parent
+        self.ASSETS_PATH = PARENT_PATH.joinpath("assets").joinpath("mainWindow")
         
         self.__static_ui()
         self.__binding_button()
