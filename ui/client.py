@@ -8,12 +8,16 @@ Author: tiendat
 
 Copyright (c) 2023 ICSLab
 '''
-
 from __future__ import absolute_import, division, print_function
 
-from tkinter import Tk
+from pathlib import Path
+import sys
+sys.path.append(str(Path(__file__).parent.parent)) #sota-fusion folder
 
-from mainWindow import MainWindow
+from src import Backend
+
+from tkinter import Tk
+from .mainWindow import MainWindow
 
 
 root = Tk()

@@ -10,16 +10,12 @@ Copyright (c) 2023 ICSLab
 from __future__ import absolute_import, division, print_function
 
 from pathlib import Path
-import sys
-sys.path.append(str(Path(__file__).parent.parent))
 
 import torch
 import librosa
 from typing import Union
 
 from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
-
-from _config import load_config
 
 
 class SpeechToViet:

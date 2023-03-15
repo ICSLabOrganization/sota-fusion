@@ -11,7 +11,7 @@ from __future__ import absolute_import, division, print_function
 
 from pathlib import Path
 import sys
-sys.path.append(str(Path(__file__).parent.parent))
+sys.path.append(str(Path(__file__).parent.parent)) #src folder
 
 import cv2
 import mediapipe as mp
@@ -120,3 +120,5 @@ class PlayGameDinosaur:
                     break
 
         cap.release()
+
+
