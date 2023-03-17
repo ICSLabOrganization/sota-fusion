@@ -13,6 +13,10 @@ from __future__ import absolute_import, division, print_function
 from pathlib import Path
 from tkinter import Canvas, PhotoImage, Tk, Toplevel
 
+from threading import Thread
+
+from src.speech2image.recording import recording
+from src.speech2image.speechToViet import SpeechToViet
 
 class Speech2Image_window:
     def __init__(self, master):
@@ -29,6 +33,9 @@ class Speech2Image_window:
 
         self.__static_ui()
         self.__binding_button()
+
+        self.recording_thread = Thread(target=self.record_audio)
+        self.speechToVietObj = SpeechToViet()
 
     def __on_closing(self):
         self.master.destroy()
@@ -261,7 +268,23 @@ class Speech2Image_window:
                 self.loadingAnimation_canvas, state="normal"
             )
 
+            # recording_thread = Thread(target=recording)
+            # text = recording()
+            self.recording_thread.start()
+
         print(ID)
+
+    def record_audio(self) :
+        recording()
+        # if (not self.recording_thread.is_alive()) :
+        self.canvas.itemconfig(
+            self.buttonGenerate_canvas, image=self.img_btnGenerate
+        )
+        self.canvas.itemconfig(
+            self.loadingAnimation_canvas, state="hidden"
+        )
+
+    
 
 def main():
     root = Tk()

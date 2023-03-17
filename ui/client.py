@@ -17,7 +17,7 @@ sys.path.append(str(Path(__file__).parent.parent)) #sota-fusion folder
 from src import Backend
 
 from tkinter import Tk
-from .mainWindow import MainWindow
+from mainWindow import MainWindow
 
 
 root = Tk()

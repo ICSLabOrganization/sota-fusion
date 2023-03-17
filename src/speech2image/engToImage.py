@@ -35,6 +35,7 @@ class EngToImage:
 
         # read config file
         self.config = load_config()
+        print("fuck")
 
     def __call__(self, en_inputText: str):
         os.environ["STABILITY_KEY"] = self.config["engToImage"]["STAB_KEY"]
@@ -47,6 +48,7 @@ class EngToImage:
             # Available engines: stable-diffusion-v1 stable-diffusion-v1-5 stable-diffusion-512-v2-0 stable-diffusion-768-v2-0 stable-inpainting-v1-0 stable-inpainting-512-v2-0
         )
         self.__generateImage(en_inputText=en_inputText)
+        return self.IMG_PATH
 
     def __generateImage(self, en_inputText: str):
         answers = self.stability_api.generate(
