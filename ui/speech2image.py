@@ -13,10 +13,6 @@ from __future__ import absolute_import, division, print_function
 from pathlib import Path
 from tkinter import Canvas, PhotoImage, Tk, Toplevel
 
-from threading import Thread
-
-from src.speech2image.recording import recording
-from src.speech2image.speechToViet import SpeechToViet
 
 class Speech2Image_window:
     def __init__(self, master):
@@ -32,10 +28,10 @@ class Speech2Image_window:
         self.ASSETS_PATH = OUTPUT_PATH.joinpath("assets")
 
         self.__static_ui()
-        self.__binding_button()
+        self.__binding_button_moveOver()
 
-        self.recording_thread = Thread(target=self.record_audio)
-        self.speechToVietObj = SpeechToViet()
+        #setup for loading state
+        self.loading_state = False
 
     def __on_closing(self):
         self.master.destroy()
@@ -72,13 +68,19 @@ class Speech2Image_window:
             file=self.__relative_to_assets("btn_back_enabled.png")
         )
 
+        self.img_btnRecord = PhotoImage(
+            file=self.__relative_to_assets("speech2image", "btn_record.png")
+        )
+        self.img_btnRecord_enabled = PhotoImage(
+            file=self.__relative_to_assets("speech2image", "btn_record_enabled.png")
+        )
+        self.img_btnRecord_running = PhotoImage(
+            file=self.__relative_to_assets("speech2image", "btn_record_running.png")
+        )
+
         self.img_result = PhotoImage(
             file=self.__relative_to_assets("speech2image", "init_result.png")
         )
-        self.img_btn_record = PhotoImage(
-            file=self.__relative_to_assets("speech2image", "btn_record.png")
-        )
-
         # frames of loading gif
         _frame_count = 8  # magic number
         self.loading_frames = [
@@ -113,33 +115,37 @@ class Speech2Image_window:
             532.0, 448.0, image=self.loading_frames[0]
         )
 
-        image_result_canvas = self.canvas.create_image(
+        self.image_result_canvas = self.canvas.create_image(
             618.0, 215.0, image=self.img_result
         )
 
-        btn_record_canvas = self.canvas.create_image(
-            208.0, 102.0, image=self.img_btn_record
+        self.btn_record_canvas = self.canvas.create_image(
+            208.0, 102.0, image=self.img_btnRecord
         )
 
         self.btnDelete_canvas = self.canvas.create_image(
             332.0, 215.0, image=self.img_btnDelete
         )
 
+        self.textResult = self.canvas.create_text(
+            47.0,
+            94.0,
+            anchor="nw",
+            text="Two cute cats dancing",
+            fill="#000000",
+            font=("Caladea", 15 * -1)
+        )
+        
         # initialize updating the loading animation
         self.canvas.after(0, self.__update_animation, 0)
 
         # hidden loading animation
         self.canvas.itemconfig(self.loadingAnimation_canvas, state="hidden")
 
-    def __binding_button(self):
+    def __binding_button_moveOver(self):
         # binding event for button
         self.canvas.tag_bind(
             self.buttonBack_canvas,
-            "<Button-1>",
-            lambda event: self.__get_click_event(ID=0, event=str(event)),
-        )
-        self.canvas.tag_bind(
-            self.buttonBack_canvas,
             "<Enter>",
             lambda event: self.__get_moveOver_event(ID=0, event=str(event)),
         )
@@ -149,11 +155,6 @@ class Speech2Image_window:
             lambda event: self.__get_moveOver_event(ID=0, event=str(event)),
         )
 
-        self.canvas.tag_bind(
-            self.buttonGenerate_canvas,
-            "<Button-1>",
-            lambda event: self.__get_click_event(ID=1, event=str(event)),
-        )
         self.canvas.tag_bind(
             self.buttonGenerate_canvas,
             "<Enter>",
@@ -167,11 +168,6 @@ class Speech2Image_window:
 
         self.canvas.tag_bind(
             self.btnDelete_canvas,
-            "<Button-1>",
-            lambda event: self.__get_click_event(ID=2, event=str(event)),
-        )
-        self.canvas.tag_bind(
-            self.btnDelete_canvas,
             "<Enter>",
             lambda event: self.__get_moveOver_event(ID=2, event=str(event)),
         )
@@ -179,6 +175,17 @@ class Speech2Image_window:
             self.btnDelete_canvas,
             "<Leave>",
             lambda event: self.__get_moveOver_event(ID=2, event=str(event)),
+        )
+        
+        self.canvas.tag_bind(
+            self.btn_record_canvas,
+            "<Enter>",
+            lambda event: self.__get_moveOver_event(ID=3, event=str(event)),
+        )
+        self.canvas.tag_bind(
+            self.btn_record_canvas,
+            "<Leave>",
+            lambda event: self.__get_moveOver_event(ID=3, event=str(event)),
         )
 
     def __update_animation(self, idx: int):
@@ -205,7 +212,7 @@ class Speech2Image_window:
         return self.ASSETS_PATH / Path(RELATIVE_PATH)
 
     def __get_moveOver_event(self, ID: int, event: str):
-        if ID == 0:
+        if ID == 0: #back button
             if "Enter" in event:
                 self.canvas.itemconfig(
                     self.buttonBack_canvas, image=self.img_btnBack_enabled
@@ -216,26 +223,20 @@ class Speech2Image_window:
                     self.buttonBack_canvas, image=self.img_btnBack
                 )
                 
-            else:
-                return
-
-        elif ID == 1:
-            if "Enter" in event:
-                self.canvas.itemconfig(
-                    self.buttonGenerate_canvas,
-                    image=self.img_btnGenerate_enabled,
-                )
-                
-            elif "Leave" in event:
-                self.canvas.itemconfig(
-                    self.buttonGenerate_canvas, image=self.img_btnGenerate
-                )
-                
-
-            else:
-                return
-
-        elif ID == 2:
+        elif ID == 1: #generate button
+            if not self.loading_state: #default is true
+                if "Enter" in event:
+                    self.canvas.itemconfig(
+                        self.buttonGenerate_canvas,
+                        image=self.img_btnGenerate_enabled,
+                    )
+                    
+                elif "Leave" in event:
+                    self.canvas.itemconfig(
+                        self.buttonGenerate_canvas, image=self.img_btnGenerate
+                    )
+                    
+        elif ID == 2: #delete button
             if "Enter" in event:
                 self.canvas.itemconfig(
                     self.btnDelete_canvas, image=self.img_btnDelete_enabled
@@ -245,51 +246,23 @@ class Speech2Image_window:
                 self.canvas.itemconfig(
                     self.btnDelete_canvas, image=self.img_btnDelete
                 )
+
+        elif ID == 3: #recording button
+            if "Enter" in event:
+                self.canvas.itemconfig(
+                    self.btn_record_canvas, image=self.img_btnRecord_enabled
+                )
                 
-            else:
-                return
+            elif "Leave" in event:
+                self.canvas.itemconfig(
+                    self.btn_record_canvas, image=self.img_btnRecord
+                )
 
-        else:
-            return
-
-    # the function to call when button clicked
-    def __get_click_event(self, ID: int, event=None):
-        if ID == 0:
-            self.window.destroy()
-            # restore the main window
-            self.master.deiconify()
-
-        elif ID == 1:
-            self.canvas.itemconfig(
-                self.buttonGenerate_canvas, image=self.img_btnGenerate_loading
-            )
-            # unhidden loadding animation
-            self.canvas.itemconfig(
-                self.loadingAnimation_canvas, state="normal"
-            )
-
-            # recording_thread = Thread(target=recording)
-            # text = recording()
-            self.recording_thread.start()
-
-        print(ID)
-
-    def record_audio(self) :
-        recording()
-        # if (not self.recording_thread.is_alive()) :
-        self.canvas.itemconfig(
-            self.buttonGenerate_canvas, image=self.img_btnGenerate
-        )
-        self.canvas.itemconfig(
-            self.loadingAnimation_canvas, state="hidden"
-        )
-
-    
 
 def main():
     root = Tk()
     root.withdraw()
-    mainWindow = Speech2Image_window(root)
+    _ = Speech2Image_window(root)
     root.mainloop()
 
 

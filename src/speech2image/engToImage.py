@@ -30,12 +30,10 @@ class EngToImage:
         PARENT_PATH = Path(__file__).parent
         ASSETS_PATH = PARENT_PATH.joinpath("assets")
 
-        CONFIG_PATH = PARENT_PATH.joinpath("config.yml")
         self.IMG_PATH = ASSETS_PATH.joinpath("output1.png")
 
         # read config file
-        self.config = load_config()
-        print("fuck")
+        self.config = load_config(mode="speech-to-image")
 
     def __call__(self, en_inputText: str):
         os.environ["STABILITY_KEY"] = self.config["engToImage"]["STAB_KEY"]
@@ -47,8 +45,9 @@ class EngToImage:
             engine="stable-diffusion-v1-5",  # Set the engine to use for generation.
             # Available engines: stable-diffusion-v1 stable-diffusion-v1-5 stable-diffusion-512-v2-0 stable-diffusion-768-v2-0 stable-inpainting-v1-0 stable-inpainting-512-v2-0
         )
-        self.__generateImage(en_inputText=en_inputText)
-        return self.IMG_PATH
+        img = self.__generateImage(en_inputText=en_inputText)
+        
+        return img
 
     def __generateImage(self, en_inputText: str):
         answers = self.stability_api.generate(
@@ -82,10 +81,12 @@ class EngToImage:
                     img = Image.open(io.BytesIO(artifact.binary))
                     img.save(self.IMG_PATH)
 
+                    return img
+
 
 def main():
     engToImage = EngToImage()    
-    engToImage(en_inputText="2 cats")
+    engToImage(en_inputText="two cats are dancing")
 
 if __name__ == "__main__":
     main()

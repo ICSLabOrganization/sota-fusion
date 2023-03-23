@@ -26,7 +26,7 @@ class MainWindow:
         self.ASSETS_PATH = PARENT_PATH.joinpath("assets").joinpath("mainWindow")
         
         self.__static_ui()
-        self.__binding_button()
+        self.__binding_button_moveOver()
 
     def __static_ui(self):
         _introduction_font = "Caladea"
@@ -183,12 +183,9 @@ class MainWindow:
             },
         }
 
-    def __binding_button(self):
+    def __binding_button_moveOver(self):
         # binding event for button
         self.canvas.tag_bind(
-            self.btn_playDinosaurGame, "<Button-1>", lambda event: self.__get_click_event(ID=1)
-        )
-        self.canvas.tag_bind(
             self.btn_playDinosaurGame,
             "<Enter>",
             lambda event: self.__get_moveOver_event(ID=1, event=str(event)),
@@ -200,9 +197,6 @@ class MainWindow:
         )
 
         self.canvas.tag_bind(
-            self.btn_styleTransfer, "<Button-1>", lambda event: self.__get_click_event(ID=2)
-        )
-        self.canvas.tag_bind(
             self.btn_styleTransfer,
             "<Enter>",
             lambda event: self.__get_moveOver_event(ID=2, event=str(event)),
@@ -213,9 +207,6 @@ class MainWindow:
             lambda event: self.__get_moveOver_event(ID=2, event=str(event)),
         )
 
-        self.canvas.tag_bind(
-            self.btn_speech2image, "<Button-1>", lambda event: self.__get_click_event(ID=3)
-        )
         self.canvas.tag_bind(
             self.btn_speech2image,
             "<Enter>",
@@ -252,24 +243,9 @@ class MainWindow:
                 self.switcher[ID]["btn_obj"], image=self.switcher[0]["button_img"][ID - 1]
             )
             
-        else:
-            return
-
-    # the function to call when button clicked
-    def __get_click_event(self, ID: int, event=None):
-        self.window.withdraw()
-        #open another window
-        if ID == 2:
-            self.sub_window = StyleTransfer_window(self.window)
-
-        elif ID == 3:
-            self.sub_window = Speech2Image_window(self.window)
-            
-        print(ID)
-        
 def main():
     root = Tk()
-    mainWindow = MainWindow(root)
+    _ = MainWindow(root)
     root.mainloop()
 
 if __name__ == "__main__":

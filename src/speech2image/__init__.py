@@ -1,9 +1,6 @@
-from .__main__ import TextToImage
+from .recording import recording
 
-def main():
-    # textToImageObj = TextToImage()
-    print("fuck")
-    
+from .speechToViet import SpeechToViet
+from .vietToEng import VietToEng
+from .engToImage import EngToImage
 
-if __name__ == "__main__":
-    main()
