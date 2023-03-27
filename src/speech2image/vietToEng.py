@@ -14,13 +14,13 @@ from pathlib import Path
 import sys
 sys.path.append(str(Path(__file__).parent.parent)) #src folder
 
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer #type: ignore
 
 from _config import load_config
 
 class VietToEng:
     def __init__(self):
-        self.config = load_config()
+        self.config = load_config(mode="speech-to-image")
 
     def __call__(self, vi_inputText: str) -> str:
         self.tokenizer_vi2en = AutoTokenizer.from_pretrained(
@@ -51,6 +51,7 @@ class VietToEng:
             output_ids, skip_special_tokens=True
         )
         en_text = " ".join(en_text)
+
         return en_text
 
 def main():

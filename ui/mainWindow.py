@@ -17,13 +17,13 @@ from style_transfer import StyleTransfer_window
 from speech2image import Speech2Image_window
 
 class MainWindow:
-    def __init__(self, master):
+    def __init__(self, master: Tk):
         self.window = master
         self.window.resizable(False, False)
 
         # replace current window with new window
         PARENT_PATH = Path(__file__).parent
-        self.ASSETS_PATH = PARENT_PATH.joinpath("assets").joinpath("mainWindow")
+        self.ASSETS_PATH = PARENT_PATH.joinpath(*["assets", "mainWindow"])
         
         self.__static_ui()
         self.__binding_button_moveOver()

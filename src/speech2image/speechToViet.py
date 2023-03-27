@@ -11,11 +11,11 @@ from __future__ import absolute_import, division, print_function
 
 from pathlib import Path
 
-import torch
-import librosa
+import torch #type: ignore
+import librosa #type: ignore
 from typing import Union
 
-from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
+from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor #type: ignore
 
 
 class SpeechToViet:
@@ -24,10 +24,10 @@ class SpeechToViet:
         PARENT_PATH = Path(__file__).parent
         ASSETS_PATH = PARENT_PATH.joinpath("assets")
 
-        self.AUDIO_PATH = ASSETS_PATH.joinpath("audio-test").joinpath("test1.wav")
+        self.AUDIO_PATH = ASSETS_PATH.joinpath(*["audio-test", "test1.wav"])
         self.LIB_PATH = PARENT_PATH.joinpath("wav2vec2-base-vietnamese-250h")
 
-    def __call__(self, audio_path: Union[str, Path] = None):
+    def __call__(self, audio_path: Union[str, Path] = None): # type: ignore
         if audio_path is None:
             audio_path = self.AUDIO_PATH
 
@@ -35,7 +35,7 @@ class SpeechToViet:
         self.processor = Wav2Vec2Processor.from_pretrained(self.LIB_PATH)
         self.model = Wav2Vec2ForCTC.from_pretrained(self.LIB_PATH)
 
-        self.__loadSpeech(audio_path=audio_path)
+        return self.__loadSpeech(audio_path=audio_path)
 
     def __loadSpeech(self, audio_path: Union[str, Path]) -> str:
         y, _ = librosa.load(audio_path, sr=16000)

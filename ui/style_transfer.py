@@ -213,10 +213,10 @@ class StyleTransfer_window:
             else:
                 RELATIVE_PATH = RELATIVE_PATH / Path(arg)
 
-        return self.ASSETS_PATH / Path(RELATIVE_PATH)
+        return self.ASSETS_PATH / Path(RELATIVE_PATH) # type: ignore
 
     def __get_moveOver_event(self, ID: int, event: str):
-        # use new_content_image, new_style_image as global variables
+        # use new_content_image, new_style_image as GLOBAL VARIABLES
         if ID == 0: #back button
             if "Enter" in event:
                 self.canvas.itemconfig(
@@ -241,11 +241,11 @@ class StyleTransfer_window:
 
         elif ID == 2:
             self.new_content_image = self.__get_movingOver_image(
-                image_PIL=self.img_content_PIL,
+                image_PIL=self.img_content_PIL, # type: ignore
                 text_canvasItem=self.text_contentImg_canvas,
                 event=event,
             )
-            self.new_content_image = ImageTk.PhotoImage(self.new_content_image)
+            self.new_content_image = ImageTk.PhotoImage(self.new_content_image) # type: ignore
             self.canvas.itemconfig(
                 self.image_content_canvas, image=self.new_content_image
             )
@@ -253,20 +253,20 @@ class StyleTransfer_window:
 
         elif ID == 3:
             self.new_style_image = self.__get_movingOver_image(
-                image_PIL=self.img_style_PIL,
+                image_PIL=self.img_style_PIL, # type: ignore
                 text_canvasItem=self.text_styleImg_canvas,
                 event=event,
             )
-            self.new_style_image = ImageTk.PhotoImage(self.new_style_image)
+            self.new_style_image = ImageTk.PhotoImage(self.new_style_image) # type: ignore
             self.canvas.itemconfig(
                 self.image_style_canvas, image=self.new_style_image
             )
 
     def __get_movingOver_image(
-        self, image_PIL: Image, text_canvasItem: int, event: str
+        self, image_PIL: Image, text_canvasItem: int, event: str # type: ignore
     ):
         if "Enter" in event:
-            enhancer = ImageEnhance.Brightness(image_PIL)
+            enhancer = ImageEnhance.Brightness(image_PIL) # type: ignore
             new_image_PIL = enhancer.enhance(0.5)
             self.canvas.itemconfig(text_canvasItem, state="normal")
 

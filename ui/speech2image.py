@@ -15,7 +15,7 @@ from tkinter import Canvas, PhotoImage, Tk, Toplevel
 
 
 class Speech2Image_window:
-    def __init__(self, master):
+    def __init__(self, master: Tk):
         self.master = master
         self.window = Toplevel(self.master)
         self.window.resizable(False, False)
@@ -81,6 +81,9 @@ class Speech2Image_window:
         self.img_result = PhotoImage(
             file=self.__relative_to_assets("speech2image", "init_result.png")
         )
+        # self.img_result = PhotoImage(
+        #     file="/home/tiendat/Workspace/Building_app/sota-fusion/src/speech2image/assets/output-images/output1.png"
+        # )
         # frames of loading gif
         _frame_count = 8  # magic number
         self.loading_frames = [
@@ -127,7 +130,7 @@ class Speech2Image_window:
             332.0, 215.0, image=self.img_btnDelete
         )
 
-        self.textResult = self.canvas.create_text(
+        self.textResult_canvas = self.canvas.create_text(
             47.0,
             94.0,
             anchor="nw",
@@ -209,7 +212,7 @@ class Speech2Image_window:
             else:
                 RELATIVE_PATH = RELATIVE_PATH / Path(arg)
 
-        return self.ASSETS_PATH / Path(RELATIVE_PATH)
+        return self.ASSETS_PATH / Path(RELATIVE_PATH) # type: ignore
 
     def __get_moveOver_event(self, ID: int, event: str):
         if ID == 0: #back button
@@ -257,6 +260,45 @@ class Speech2Image_window:
                 self.canvas.itemconfig(
                     self.btn_record_canvas, image=self.img_btnRecord
                 )
+
+    def enter_loading_status(self, mode: str = None): # type: ignore
+        self.loading_state = True
+        
+        if mode == 'recording':
+            #update status recording button
+            self.canvas.itemconfig(
+                self.btn_record_canvas, image=self.img_btnRecord_running
+            )
+        
+        else:
+            # unhidden loadding animation
+            self.canvas.itemconfig(
+                self.loadingAnimation_canvas, state="normal"
+            )
+
+            self.canvas.itemconfig(
+                self.buttonGenerate_canvas, image=self.img_btnGenerate_loading
+            )
+    
+    def exit_loading_status(self):
+        self.loading_state = False
+
+        # hidden loadding animation
+        self.canvas.itemconfig(
+            self.loadingAnimation_canvas, state="hidden"
+        )
+
+        # restore status for generate button
+        self.canvas.itemconfig(
+            self.buttonGenerate_canvas,
+            image=self.img_btnGenerate_enabled
+        )
+
+        #restore status for record button
+        self.canvas.itemconfig(
+            self.btn_record_canvas,
+            image=self.img_btnRecord_enabled
+        )
 
 
 def main():
