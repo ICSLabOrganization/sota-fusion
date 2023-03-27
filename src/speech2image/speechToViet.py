@@ -37,6 +37,7 @@ class SpeechToViet:
 
         return self.__loadSpeech(audio_path=audio_path)
 
+
     def __loadSpeech(self, audio_path: Union[str, Path]) -> str:
         y, _ = librosa.load(audio_path, sr=16000)
 
