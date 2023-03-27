@@ -19,10 +19,10 @@ from threading import Thread
 from tkinter import Image, Tk
 
 from loguru import logger  # type: ignore
-from mainWindow import MainWindow
 from PIL import ImageTk
 
 sys.path.append(str(Path(__file__).parent.parent))  # root directory
+from mainWindow import MainWindow # noqa: E402
 from speech2image import Speech2Image_window  # noqa: E402
 from style_transfer import StyleTransfer_window  # noqa: E402
 
