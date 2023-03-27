@@ -19,16 +19,16 @@ import random
 import warnings
 from PIL import Image
 
-from stability_sdk import client
-import stability_sdk.interfaces.gooseai.generation.generation_pb2 as generation
+from stability_sdk import client #type: ignore
+import stability_sdk.interfaces.gooseai.generation.generation_pb2 as generation #type: ignore
 
 from _config import load_config
 
 
 class EngToImage:
     def __init__(self):
-        PARENT_PATH = Path(__file__).parent
-        ASSETS_PATH = PARENT_PATH.joinpath("assets")
+        PARENT_PATH = Path(__file__).parents[2] #root directory
+        ASSETS_PATH = PARENT_PATH.joinpath(*["assets", "output-images"])
 
         self.IMG_PATH = ASSETS_PATH.joinpath("output1.png")
 

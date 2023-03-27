@@ -1,8 +1,8 @@
 import yaml
 from pathlib import Path
 
-def load_config(mode : str = None):
-    CONFIG_PATH = Path(__file__).parent.parent.joinpath("config.yml")
+def load_config(mode : str = None): # type: ignore
+    CONFIG_PATH = Path(__file__).parent.parent.joinpath("config.yml") #root directory
 
     # read config file
     with open(CONFIG_PATH, "r") as config_file:
