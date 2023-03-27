@@ -227,7 +227,7 @@ class MainWindow:
             else:
                 RELATIVE_PATH = RELATIVE_PATH / Path(arg)
 
-        return PhotoImage(file=self.ASSETS_PATH / Path(RELATIVE_PATH))
+        return PhotoImage(file=self.ASSETS_PATH / Path(RELATIVE_PATH)) # type: ignore
 
     def __get_moveOver_event(self, ID: int, event: str):
         if "Enter" in event:
