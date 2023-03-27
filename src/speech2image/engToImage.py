@@ -1,33 +1,32 @@
 #!/usr/bin/env python3
 
-'''
+"""
 Filename: /home/tiendat/Workspace/Building_app/sota-fusion/src/speech-to-image/classes/engToImage.py
 Path: /home/tiendat/Workspace/Building_app/sota-fusion/src/speech-to-image/classes
 Created Date: Friday, March 3rd 2023, 4:22:07 pm
 
 Copyright (c) 2023 ICSLab
-'''
+"""
 from __future__ import absolute_import, division, print_function
-
-from pathlib import Path
-import sys
-sys.path.append(str(Path(__file__).parent.parent)) #src folder
 
 import io
 import os
 import random
+import sys
 import warnings
+from pathlib import Path
+
+import stability_sdk.interfaces.gooseai.generation.generation_pb2 as generation  # type: ignore
 from PIL import Image
+from stability_sdk import client  # type: ignore
 
-from stability_sdk import client #type: ignore
-import stability_sdk.interfaces.gooseai.generation.generation_pb2 as generation #type: ignore
-
-from _config import load_config
+# sys.path.append(str(Path(__file__).parent.parent))  # src folder
+from .._config import load_config
 
 
 class EngToImage:
     def __init__(self):
-        PARENT_PATH = Path(__file__).parents[2] #root directory
+        PARENT_PATH = Path(__file__).parents[2]  # root directory
         ASSETS_PATH = PARENT_PATH.joinpath(*["assets", "output-images"])
 
         self.IMG_PATH = ASSETS_PATH.joinpath("output1.png")
@@ -38,7 +37,7 @@ class EngToImage:
     def __call__(self, en_inputText: str):
         os.environ["STABILITY_KEY"] = self.config["engToImage"]["STAB_KEY"]
         os.environ["STABILITY_HOST"] = self.config["engToImage"]["STAB_HOST"]
-        
+
         self.stability_api = client.StabilityInference(
             key=os.environ["STABILITY_KEY"],  # API Key reference.
             verbose=True,  # Print debug messages.
@@ -46,15 +45,13 @@ class EngToImage:
             # Available engines: stable-diffusion-v1 stable-diffusion-v1-5 stable-diffusion-512-v2-0 stable-diffusion-768-v2-0 stable-inpainting-v1-0 stable-inpainting-512-v2-0
         )
         img = self.__generateImage(en_inputText=en_inputText)
-        
+
         return img
 
     def __generateImage(self, en_inputText: str):
         answers = self.stability_api.generate(
             prompt=en_inputText,
-            seed=random.randint(
-                100000000, 998244353
-            ),  
+            seed=random.randint(100000000, 998244353),
             # If a seed is provided, the resulting generated image will be deterministic.
             # What this means is that as long as all generation parameters remain the same, you can always recall the same image simply by generating it again.
             # Note: This isn't quite the case for Clip Guided generations, which we'll tackle in a future example notebook.
@@ -85,8 +82,10 @@ class EngToImage:
 
 
 def main():
-    engToImage = EngToImage()    
-    engToImage(en_inputText="two cats are dancing")
+    # engToImage = EngToImage()
+    # engToImage(en_inputText="two cats are dancing")
+    print("Press")
+
 
 if __name__ == "__main__":
     main()

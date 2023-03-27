@@ -1,24 +1,24 @@
 #!/usr/bin/env python3
 
-'''
+"""
 Filename: /home/tiendat/Workspace/Building_app/sota-fusion/src/gesture-recognition/play_game_dinosaur.py
 Path: /home/tiendat/Workspace/Building_app/sota-fusion/src/gesture-recognition
 Created Date: Saturday, March 4th 2023, 6:06:37 pm
 
 Copyright (c) 2023 ICSLab
-'''
+"""
 from __future__ import absolute_import, division, print_function
 
-from pathlib import Path
 import sys
-sys.path.append(str(Path(__file__).parent.parent)) #src folder
+from pathlib import Path
 
 import cv2
 import mediapipe as mp
 import pyautogui as ui
 from selenium import webdriver
 
-from _config import load_config
+sys.path.append(str(Path(__file__).parent.parent))  # src folder
+from _config import load_config  # noqa: E402
 
 
 class PlayGameDinosaur:
@@ -120,5 +120,3 @@ class PlayGameDinosaur:
                     break
 
         cap.release()
-
-

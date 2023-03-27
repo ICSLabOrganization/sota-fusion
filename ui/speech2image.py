@@ -20,7 +20,7 @@ class Speech2Image_window:
         self.window = Toplevel(self.master)
         self.window.resizable(False, False)
 
-        #get close event 
+        # get close event
         self.window.protocol("WM_DELETE_WINDOW", self.__on_closing)
 
         # replace current window with new window
@@ -30,7 +30,7 @@ class Speech2Image_window:
         self.__static_ui()
         self.__binding_button_moveOver()
 
-        #setup for loading state
+        # setup for loading state
         self.loading_state = False
 
     def __on_closing(self):
@@ -72,10 +72,14 @@ class Speech2Image_window:
             file=self.__relative_to_assets("speech2image", "btn_record.png")
         )
         self.img_btnRecord_enabled = PhotoImage(
-            file=self.__relative_to_assets("speech2image", "btn_record_enabled.png")
+            file=self.__relative_to_assets(
+                "speech2image", "btn_record_enabled.png"
+            )
         )
         self.img_btnRecord_running = PhotoImage(
-            file=self.__relative_to_assets("speech2image", "btn_record_running.png")
+            file=self.__relative_to_assets(
+                "speech2image", "btn_record_running.png"
+            )
         )
 
         self.img_result = PhotoImage(
@@ -136,9 +140,9 @@ class Speech2Image_window:
             anchor="nw",
             text="Two cute cats dancing",
             fill="#000000",
-            font=("Caladea", 15 * -1)
+            font=("Caladea", 15 * -1),
         )
-        
+
         # initialize updating the loading animation
         self.canvas.after(0, self.__update_animation, 0)
 
@@ -179,7 +183,7 @@ class Speech2Image_window:
             "<Leave>",
             lambda event: self.__get_moveOver_event(ID=2, event=str(event)),
         )
-        
+
         self.canvas.tag_bind(
             self.btn_record_canvas,
             "<Enter>",
@@ -201,7 +205,6 @@ class Speech2Image_window:
             self.loadingAnimation_canvas, image=current_frame
         )
         self.canvas.after(100, self.__update_animation, idx)
-        
 
     def __relative_to_assets(self, *args: str) -> Path:
         RELATIVE_PATH = None
@@ -212,64 +215,64 @@ class Speech2Image_window:
             else:
                 RELATIVE_PATH = RELATIVE_PATH / Path(arg)
 
-        return self.ASSETS_PATH / Path(RELATIVE_PATH) # type: ignore
+        return self.ASSETS_PATH / Path(RELATIVE_PATH)  # type: ignore
 
     def __get_moveOver_event(self, ID: int, event: str):
-        if ID == 0: #back button
+        if ID == 0:  # back button
             if "Enter" in event:
                 self.canvas.itemconfig(
                     self.buttonBack_canvas, image=self.img_btnBack_enabled
                 )
-                
+
             elif "Leave" in event:
                 self.canvas.itemconfig(
                     self.buttonBack_canvas, image=self.img_btnBack
                 )
-                
-        elif ID == 1: #generate button
-            if not self.loading_state: #default is true
+
+        elif ID == 1:  # generate button
+            if not self.loading_state:  # default is true
                 if "Enter" in event:
                     self.canvas.itemconfig(
                         self.buttonGenerate_canvas,
                         image=self.img_btnGenerate_enabled,
                     )
-                    
+
                 elif "Leave" in event:
                     self.canvas.itemconfig(
                         self.buttonGenerate_canvas, image=self.img_btnGenerate
                     )
-                    
-        elif ID == 2: #delete button
+
+        elif ID == 2:  # delete button
             if "Enter" in event:
                 self.canvas.itemconfig(
                     self.btnDelete_canvas, image=self.img_btnDelete_enabled
                 )
-                
+
             elif "Leave" in event:
                 self.canvas.itemconfig(
                     self.btnDelete_canvas, image=self.img_btnDelete
                 )
 
-        elif ID == 3: #recording button
+        elif ID == 3:  # recording button
             if "Enter" in event:
                 self.canvas.itemconfig(
                     self.btn_record_canvas, image=self.img_btnRecord_enabled
                 )
-                
+
             elif "Leave" in event:
                 self.canvas.itemconfig(
                     self.btn_record_canvas, image=self.img_btnRecord
                 )
 
-    def enter_loading_status(self, mode: str = None): # type: ignore
+    def enter_loading_status(self, mode: str = None):  # type: ignore
         self.loading_state = True
-        
-        if mode == 'recording':
-            #update status recording button
+
+        if mode == "recording":
+            # update status recording button
             self.canvas.itemconfig(
                 self.btn_record_canvas, image=self.img_btnRecord_running
             )
-        
+
         else:
             # unhidden loadding animation
             self.canvas.itemconfig(
@@ -279,25 +282,21 @@ class Speech2Image_window:
             self.canvas.itemconfig(
                 self.buttonGenerate_canvas, image=self.img_btnGenerate_loading
             )
-    
+
     def exit_loading_status(self):
         self.loading_state = False
 
         # hidden loadding animation
-        self.canvas.itemconfig(
-            self.loadingAnimation_canvas, state="hidden"
-        )
+        self.canvas.itemconfig(self.loadingAnimation_canvas, state="hidden")
 
         # restore status for generate button
         self.canvas.itemconfig(
-            self.buttonGenerate_canvas,
-            image=self.img_btnGenerate_enabled
+            self.buttonGenerate_canvas, image=self.img_btnGenerate_enabled
         )
 
-        #restore status for record button
+        # restore status for record button
         self.canvas.itemconfig(
-            self.btn_record_canvas,
-            image=self.img_btnRecord_enabled
+            self.btn_record_canvas, image=self.img_btnRecord_enabled
         )
 
 

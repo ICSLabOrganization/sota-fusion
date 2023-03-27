@@ -2,9 +2,4 @@
 # coding: utf-8
 
 from ._version import __version__
-
-from .speech2image import recording, \
-                          SpeechToViet, \
-                          VietToEng, \
-                          EngToImage
-
+from .speech2image import EngToImage, SpeechToViet, VietToEng, recording

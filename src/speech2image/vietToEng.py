@@ -1,22 +1,23 @@
 #!/usr/bin/env python3
 
-'''
+"""
 Filename: /home/tiendat/Workspace/Building_app/sota-fusion/src/speech2image/vietToEng.py
 Path: /home/tiendat/Workspace/Building_app/sota-fusion/src/speech2image
 Created Date: Friday, March 3rd 2023, 4:22:07 pm
 
 Copyright (c) 2023 ICSLab
-'''
+"""
 
 from __future__ import absolute_import, division, print_function
 
-from pathlib import Path
 import sys
-sys.path.append(str(Path(__file__).parent.parent)) #src folder
+from pathlib import Path
 
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer #type: ignore
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer  # type: ignore
 
-from _config import load_config
+sys.path.append(str(Path(__file__).parent.parent))  # src folder
+from _config import load_config  # noqa: E402
+
 
 class VietToEng:
     def __init__(self):
@@ -54,9 +55,11 @@ class VietToEng:
 
         return en_text
 
+
 def main():
-    vietToEng = VietToEng()    
+    vietToEng = VietToEng()
     vietToEng(vi_inputText="")
+
 
 if __name__ == "__main__":
     main()

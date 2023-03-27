@@ -1,7 +1,8 @@
 import cv2
 import mediapipe as mp
-import pyautogui
 import numpy as np
+import pyautogui
+
 cap = cv2.VideoCapture(0)
 hand_detector = mp.solutions.hands.Hands()
 drawing_utils = mp.solutions.drawing_utils
@@ -20,23 +21,33 @@ while True:
             drawing_utils.draw_landmarks(frame, hand)
             landmarks = hand.landmark
             for id, landmark in enumerate(landmarks):
-                x = int(landmark.x*frame_width)
-                y = int(landmark.y*frame_height)
+                x = int(landmark.x * frame_width)
+                y = int(landmark.y * frame_height)
                 if id == 8:
-                    cv2.circle(img=frame, center=(x,y), radius=10, color=(0, 255, 255))
-                    index_x = screen_width/frame_width*x
-                    index_y = screen_height/frame_height*y
+                    cv2.circle(
+                        img=frame,
+                        center=(x, y),
+                        radius=10,
+                        color=(0, 255, 255),
+                    )
+                    index_x = screen_width / frame_width * x
+                    index_y = screen_height / frame_height * y
 
                 if id == 4:
-                    cv2.circle(img=frame, center=(x,y), radius=10, color=(0, 255, 255))
-                    thumb_x = screen_width/frame_width*x
-                    thumb_y = screen_height/frame_height*y
-                    print('outside', abs(index_y - thumb_y))
+                    cv2.circle(
+                        img=frame,
+                        center=(x, y),
+                        radius=10,
+                        color=(0, 255, 255),
+                    )
+                    thumb_x = screen_width / frame_width * x
+                    thumb_y = screen_height / frame_height * y
+                    print("outside", abs(index_y - thumb_y))
                     if abs(index_y - thumb_y) < 20:
-                        print('click')
+                        print("click")
                         pyautogui.click()
                         pyautogui.sleep(1)
                     elif abs(index_y - thumb_y) < 100:
                         pyautogui.moveTo(index_x, index_y)
-    cv2.imshow('Virtual Mouse', frame)
+    cv2.imshow("Virtual Mouse", frame)
     cv2.waitKey(1)

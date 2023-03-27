@@ -22,7 +22,7 @@ class StyleTransfer_window:
         self.window = Toplevel(self.master)
         self.window.resizable(False, False)
 
-        #get close event 
+        # get close event
         self.window.protocol("WM_DELETE_WINDOW", self.__on_closing)
 
         OUTPUT_PATH = Path(__file__).parent
@@ -36,9 +36,9 @@ class StyleTransfer_window:
             self.__relative_to_assets("style-transfer", "init_style.png")
         )
 
-        #setup for loading state
+        # setup for loading state
         self.loading_state = False
-        
+
         self.__static_ui()
         self.__binding_button_moveOver()
 
@@ -135,7 +135,7 @@ class StyleTransfer_window:
             532.0, 448.0, image=self.loading_frames[0]
         )
 
-        image_result_canvas = self.canvas.create_image(
+        self.image_result_canvas = self.canvas.create_image(
             618.0, 215.0, image=self.img_result
         )
 
@@ -170,7 +170,7 @@ class StyleTransfer_window:
             "<Leave>",
             lambda event: self.__get_moveOver_event(ID=1, event=str(event)),
         )
-        
+
         self.canvas.tag_bind(
             self.image_content_canvas,
             "<Enter>",
@@ -213,11 +213,11 @@ class StyleTransfer_window:
             else:
                 RELATIVE_PATH = RELATIVE_PATH / Path(arg)
 
-        return self.ASSETS_PATH / Path(RELATIVE_PATH) # type: ignore
+        return self.ASSETS_PATH / Path(RELATIVE_PATH)  # type: ignore
 
     def __get_moveOver_event(self, ID: int, event: str):
         # use new_content_image, new_style_image as GLOBAL VARIABLES
-        if ID == 0: #back button
+        if ID == 0:  # back button
             if "Enter" in event:
                 self.canvas.itemconfig(
                     self.buttonBack_canvas, image=self.img_btnBack_enabled
@@ -226,8 +226,8 @@ class StyleTransfer_window:
                 self.canvas.itemconfig(
                     self.buttonBack_canvas, image=self.img_btnBack
                 )
-            
-        elif ID == 1: #generate button
+
+        elif ID == 1:  # generate button
             if not self.loading_state:
                 if "Enter" in event:
                     self.canvas.itemconfig(
@@ -241,32 +241,31 @@ class StyleTransfer_window:
 
         elif ID == 2:
             self.new_content_image = self.__get_movingOver_image(
-                image_PIL=self.img_content_PIL, # type: ignore
+                image_PIL=self.img_content_PIL,  # type: ignore
                 text_canvasItem=self.text_contentImg_canvas,
                 event=event,
             )
-            self.new_content_image = ImageTk.PhotoImage(self.new_content_image) # type: ignore
+            self.new_content_image = ImageTk.PhotoImage(self.new_content_image)  # type: ignore
             self.canvas.itemconfig(
                 self.image_content_canvas, image=self.new_content_image
             )
-            
 
         elif ID == 3:
             self.new_style_image = self.__get_movingOver_image(
-                image_PIL=self.img_style_PIL, # type: ignore
+                image_PIL=self.img_style_PIL,  # type: ignore
                 text_canvasItem=self.text_styleImg_canvas,
                 event=event,
             )
-            self.new_style_image = ImageTk.PhotoImage(self.new_style_image) # type: ignore
+            self.new_style_image = ImageTk.PhotoImage(self.new_style_image)  # type: ignore
             self.canvas.itemconfig(
                 self.image_style_canvas, image=self.new_style_image
             )
 
     def __get_movingOver_image(
-        self, image_PIL: Image, text_canvasItem: int, event: str # type: ignore
+        self, image_PIL: Image, text_canvasItem: int, event: str  # type: ignore
     ):
         if "Enter" in event:
-            enhancer = ImageEnhance.Brightness(image_PIL) # type: ignore
+            enhancer = ImageEnhance.Brightness(image_PIL)  # type: ignore
             new_image_PIL = enhancer.enhance(0.5)
             self.canvas.itemconfig(text_canvasItem, state="normal")
 
@@ -282,6 +281,7 @@ def main():
     root.withdraw()
     _ = StyleTransfer_window(root)
     root.mainloop()
+
 
 if __name__ == "__main__":
     main()

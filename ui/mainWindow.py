@@ -13,8 +13,9 @@ from __future__ import absolute_import, division, print_function
 from pathlib import Path
 from tkinter import Canvas, PhotoImage, Tk
 
-from style_transfer import StyleTransfer_window
 from speech2image import Speech2Image_window
+from style_transfer import StyleTransfer_window
+
 
 class MainWindow:
     def __init__(self, master: Tk):
@@ -24,7 +25,7 @@ class MainWindow:
         # replace current window with new window
         PARENT_PATH = Path(__file__).parent
         self.ASSETS_PATH = PARENT_PATH.joinpath(*["assets", "mainWindow"])
-        
+
         self.__static_ui()
         self.__binding_button_moveOver()
 
@@ -38,14 +39,24 @@ class MainWindow:
 
         # image background
         _img_bg = self.__relative_to_assets("bg.png")
-        _img_bg_playDinosaurGame = self.__relative_to_assets("bg_play-dinosaur-game.png")
-        _img_bg_styleTransfer = self.__relative_to_assets("bg_style-transfer.png")
+        _img_bg_playDinosaurGame = self.__relative_to_assets(
+            "bg_play-dinosaur-game.png"
+        )
+        _img_bg_styleTransfer = self.__relative_to_assets(
+            "bg_style-transfer.png"
+        )
         _img_bg_speech2image = self.__relative_to_assets("bg_speech2image.png")
 
         # image button deactive
-        _img_btn_playDinosaurGame = self.__relative_to_assets("btn_play-dinosaur-game.png")
-        _img_btn_styleTransfer = self.__relative_to_assets("btn_style-transfer.png")
-        _img_btn_speech2image = self.__relative_to_assets("btn_speech2image.png")
+        _img_btn_playDinosaurGame = self.__relative_to_assets(
+            "btn_play-dinosaur-game.png"
+        )
+        _img_btn_styleTransfer = self.__relative_to_assets(
+            "btn_style-transfer.png"
+        )
+        _img_btn_speech2image = self.__relative_to_assets(
+            "btn_speech2image.png"
+        )
 
         # image button active
         _img_btn_playDinosaurGame_enabled = self.__relative_to_assets(
@@ -101,7 +112,9 @@ class MainWindow:
             font=("Roboto Medium", 24 * -1),
         )
 
-        self.canvas.create_rectangle(40.0, 160.0, 100.0, 165.0, fill="#FCFCFC", outline="")
+        self.canvas.create_rectangle(
+            40.0, 160.0, 100.0, 165.0, fill="#FCFCFC", outline=""
+        )
 
         self.canvas.create_text(
             40.0,
@@ -227,34 +240,33 @@ class MainWindow:
             else:
                 RELATIVE_PATH = RELATIVE_PATH / Path(arg)
 
-        return PhotoImage(file=self.ASSETS_PATH / Path(RELATIVE_PATH)) # type: ignore
+        return PhotoImage(file=self.ASSETS_PATH / Path(RELATIVE_PATH))  # type: ignore
 
     def __get_moveOver_event(self, ID: int, event: str):
         if "Enter" in event:
-            self.canvas.itemconfig(self.bg, image=self.switcher[ID]["background_img"])
             self.canvas.itemconfig(
-                self.switcher[ID]["btn_obj"], image=self.switcher[ID]["button_img"]
+                self.bg, image=self.switcher[ID]["background_img"]
             )
-            
-        
+            self.canvas.itemconfig(
+                self.switcher[ID]["btn_obj"],
+                image=self.switcher[ID]["button_img"],
+            )
+
         elif "Leave" in event:
-            self.canvas.itemconfig(self.bg, image=self.switcher[0]["background_img"])
             self.canvas.itemconfig(
-                self.switcher[ID]["btn_obj"], image=self.switcher[0]["button_img"][ID - 1]
+                self.bg, image=self.switcher[0]["background_img"]
             )
-            
+            self.canvas.itemconfig(
+                self.switcher[ID]["btn_obj"],
+                image=self.switcher[0]["button_img"][ID - 1],
+            )
+
+
 def main():
     root = Tk()
     _ = MainWindow(root)
     root.mainloop()
 
+
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
