@@ -16,15 +16,22 @@ import librosa  # type: ignore
 import torch  # type: ignore
 from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor  # type: ignore
 
+import sys
+sys.path.append(str(Path(__file__).parent.parent))  # src folder
+from _config import load_config
+
 
 class SpeechToViet:
     def __init__(self):
         # get current file path
         PARENT_PATH = Path(__file__).parent
-        ASSETS_PATH = PARENT_PATH.joinpath("assets")
+        ASSETS_PATH = PARENT_PATH.parent.parent.joinpath("assets")
+        # print(ASSETS_PATH)
 
         self.AUDIO_PATH = ASSETS_PATH.joinpath(*["audio-test", "test1.wav"])
-        self.LIB_PATH = PARENT_PATH.joinpath("wav2vec2-base-vietnamese-250h")
+        # self.LIB_PATH = PARENT_PATH.joinpath("wav2vec2-base-vietnamese-250h")
+        self.config = load_config(mode = "speech-to-image")
+        self.LIB_PATH = self.config["LIB"]["RECOGNIZER"]
 
     def __call__(self, audio_path: Union[str, Path] = None):  # type: ignore
         if audio_path is None:
