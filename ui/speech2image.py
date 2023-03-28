@@ -28,7 +28,7 @@ class Speech2Image_window:
         self.ASSETS_PATH = OUTPUT_PATH.joinpath("assets")
 
         self.__static_ui()
-        self.__binding_button_moveOver()
+        self._binding_button_moveOver()
 
         # setup for loading state
         self.loading_state = False
@@ -43,47 +43,47 @@ class Speech2Image_window:
 
         # image button deactive and active
         self.img_btnGenerate = PhotoImage(
-            file=self.__relative_to_assets("btn_generate.png")
+            file=self._relative_to_assets("btn_generate.png")
         )
         self.img_btnGenerate_enabled = PhotoImage(
-            file=self.__relative_to_assets("btn_generate_enabled.png")
+            file=self._relative_to_assets("btn_generate_enabled.png")
         )
         self.img_btnGenerate_loading = PhotoImage(
-            file=self.__relative_to_assets("btn_generate_loadingbg.png")
+            file=self._relative_to_assets("btn_generate_loadingbg.png")
         )
 
         self.img_btnDelete = PhotoImage(
-            file=self.__relative_to_assets("speech2image", "btn_delete.png")
+            file=self._relative_to_assets("speech2image", "btn_delete.png")
         )
         self.img_btnDelete_enabled = PhotoImage(
-            file=self.__relative_to_assets(
+            file=self._relative_to_assets(
                 "speech2image", "btn_delete_enabled.png"
             )
         )
 
         self.img_btnBack = PhotoImage(
-            file=self.__relative_to_assets("btn_back.png")
+            file=self._relative_to_assets("btn_back.png")
         )
         self.img_btnBack_enabled = PhotoImage(
-            file=self.__relative_to_assets("btn_back_enabled.png")
+            file=self._relative_to_assets("btn_back_enabled.png")
         )
 
         self.img_btnRecord = PhotoImage(
-            file=self.__relative_to_assets("speech2image", "btn_record.png")
+            file=self._relative_to_assets("speech2image", "btn_record.png")
         )
         self.img_btnRecord_enabled = PhotoImage(
-            file=self.__relative_to_assets(
+            file=self._relative_to_assets(
                 "speech2image", "btn_record_enabled.png"
             )
         )
         self.img_btnRecord_running = PhotoImage(
-            file=self.__relative_to_assets(
+            file=self._relative_to_assets(
                 "speech2image", "btn_record_running.png"
             )
         )
 
         self.img_result = PhotoImage(
-            file=self.__relative_to_assets("speech2image", "init_result.png")
+            file=self._relative_to_assets("speech2image", "init_result.png")
         )
         # self.img_result = PhotoImage(
         #     file="/home/tiendat/Workspace/Building_app/sota-fusion/src/speech2image/assets/output-images/output1.png"
@@ -92,7 +92,7 @@ class Speech2Image_window:
         _frame_count = 8  # magic number
         self.loading_frames = [
             PhotoImage(
-                file=self.__relative_to_assets("loading_animation.gif"),
+                file=self._relative_to_assets("loading_animation.gif"),
                 format="gif -index %i" % (i),
             )
             for i in range(_frame_count)
@@ -144,58 +144,58 @@ class Speech2Image_window:
         )
 
         # initialize updating the loading animation
-        self.canvas.after(0, self.__update_animation, 0)
+        self.canvas.after(0, self._update_animation, 0)
 
         # hidden loading animation
         self.canvas.itemconfig(self.loadingAnimation_canvas, state="hidden")
 
-    def __binding_button_moveOver(self):
+    def _binding_button_moveOver(self):
         # binding event for button
         self.canvas.tag_bind(
             self.buttonBack_canvas,
             "<Enter>",
-            lambda event: self.__get_moveOver_event(ID=0, event=str(event)),
+            lambda event: self._get_moveOver_event(ID=0, event=str(event)),
         )
         self.canvas.tag_bind(
             self.buttonBack_canvas,
             "<Leave>",
-            lambda event: self.__get_moveOver_event(ID=0, event=str(event)),
+            lambda event: self._get_moveOver_event(ID=0, event=str(event)),
         )
 
         self.canvas.tag_bind(
             self.buttonGenerate_canvas,
             "<Enter>",
-            lambda event: self.__get_moveOver_event(ID=1, event=str(event)),
+            lambda event: self._get_moveOver_event(ID=1, event=str(event)),
         )
         self.canvas.tag_bind(
             self.buttonGenerate_canvas,
             "<Leave>",
-            lambda event: self.__get_moveOver_event(ID=1, event=str(event)),
+            lambda event: self._get_moveOver_event(ID=1, event=str(event)),
         )
 
         self.canvas.tag_bind(
             self.btnDelete_canvas,
             "<Enter>",
-            lambda event: self.__get_moveOver_event(ID=2, event=str(event)),
+            lambda event: self._get_moveOver_event(ID=2, event=str(event)),
         )
         self.canvas.tag_bind(
             self.btnDelete_canvas,
             "<Leave>",
-            lambda event: self.__get_moveOver_event(ID=2, event=str(event)),
+            lambda event: self._get_moveOver_event(ID=2, event=str(event)),
         )
 
         self.canvas.tag_bind(
             self.btn_record_canvas,
             "<Enter>",
-            lambda event: self.__get_moveOver_event(ID=3, event=str(event)),
+            lambda event: self._get_moveOver_event(ID=3, event=str(event)),
         )
         self.canvas.tag_bind(
             self.btn_record_canvas,
             "<Leave>",
-            lambda event: self.__get_moveOver_event(ID=3, event=str(event)),
+            lambda event: self._get_moveOver_event(ID=3, event=str(event)),
         )
 
-    def __update_animation(self, idx: int):
+    def _update_animation(self, idx: int):
         current_frame = self.loading_frames[idx]
         idx = idx + 1
         if idx >= len(self.loading_frames):
@@ -204,9 +204,9 @@ class Speech2Image_window:
         self.canvas.itemconfig(
             self.loadingAnimation_canvas, image=current_frame
         )
-        self.canvas.after(100, self.__update_animation, idx)
+        self.canvas.after(100, self._update_animation, idx)
 
-    def __relative_to_assets(self, *args: str) -> Path:
+    def _relative_to_assets(self, *args: str) -> Path:
         RELATIVE_PATH = None
 
         for arg in args:
@@ -217,7 +217,7 @@ class Speech2Image_window:
 
         return self.ASSETS_PATH / Path(RELATIVE_PATH)  # type: ignore
 
-    def __get_moveOver_event(self, ID: int, event: str):
+    def _get_moveOver_event(self, ID: int, event: str):
         if ID == 0:  # back button
             if "Enter" in event:
                 self.canvas.itemconfig(

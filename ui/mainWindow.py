@@ -27,7 +27,7 @@ class MainWindow:
         self.ASSETS_PATH = PARENT_PATH.joinpath(*["assets", "mainWindow"])
 
         self.__static_ui()
-        self.__binding_button_moveOver()
+        self._binding_button_moveOver()
 
     def __static_ui(self):
         _introduction_font = "Caladea"
@@ -38,34 +38,34 @@ class MainWindow:
         self.window.configure(bg="#3A7FF6")
 
         # image background
-        _img_bg = self.__relative_to_assets("bg.png")
-        _img_bg_playDinosaurGame = self.__relative_to_assets(
+        _img_bg = self._relative_to_assets("bg.png")
+        _img_bg_playDinosaurGame = self._relative_to_assets(
             "bg_play-dinosaur-game.png"
         )
-        _img_bg_styleTransfer = self.__relative_to_assets(
+        _img_bg_styleTransfer = self._relative_to_assets(
             "bg_style-transfer.png"
         )
-        _img_bg_speech2image = self.__relative_to_assets("bg_speech2image.png")
+        _img_bg_speech2image = self._relative_to_assets("bg_speech2image.png")
 
         # image button deactive
-        _img_btn_playDinosaurGame = self.__relative_to_assets(
+        _img_btn_playDinosaurGame = self._relative_to_assets(
             "btn_play-dinosaur-game.png"
         )
-        _img_btn_styleTransfer = self.__relative_to_assets(
+        _img_btn_styleTransfer = self._relative_to_assets(
             "btn_style-transfer.png"
         )
-        _img_btn_speech2image = self.__relative_to_assets(
+        _img_btn_speech2image = self._relative_to_assets(
             "btn_speech2image.png"
         )
 
         # image button active
-        _img_btn_playDinosaurGame_enabled = self.__relative_to_assets(
+        _img_btn_playDinosaurGame_enabled = self._relative_to_assets(
             "btn_play-dinosaur-game_enabled.png"
         )
-        _img_btn_styleTransfer_enabled = self.__relative_to_assets(
+        _img_btn_styleTransfer_enabled = self._relative_to_assets(
             "btn_style-transfer_enabled.png"
         )
-        _img_btn_speech2image_enabled = self.__relative_to_assets(
+        _img_btn_speech2image_enabled = self._relative_to_assets(
             "btn_speech2image_enabled.png"
         )
 
@@ -196,42 +196,42 @@ class MainWindow:
             },
         }
 
-    def __binding_button_moveOver(self):
+    def _binding_button_moveOver(self):
         # binding event for button
         self.canvas.tag_bind(
             self.btn_playDinosaurGame,
             "<Enter>",
-            lambda event: self.__get_moveOver_event(ID=1, event=str(event)),
+            lambda event: self._get_moveOver_event(ID=1, event=str(event)),
         )
         self.canvas.tag_bind(
             self.btn_playDinosaurGame,
             "<Leave>",
-            lambda event: self.__get_moveOver_event(ID=1, event=str(event)),
+            lambda event: self._get_moveOver_event(ID=1, event=str(event)),
         )
 
         self.canvas.tag_bind(
             self.btn_styleTransfer,
             "<Enter>",
-            lambda event: self.__get_moveOver_event(ID=2, event=str(event)),
+            lambda event: self._get_moveOver_event(ID=2, event=str(event)),
         )
         self.canvas.tag_bind(
             self.btn_styleTransfer,
             "<Leave>",
-            lambda event: self.__get_moveOver_event(ID=2, event=str(event)),
+            lambda event: self._get_moveOver_event(ID=2, event=str(event)),
         )
 
         self.canvas.tag_bind(
             self.btn_speech2image,
             "<Enter>",
-            lambda event: self.__get_moveOver_event(ID=3, event=str(event)),
+            lambda event: self._get_moveOver_event(ID=3, event=str(event)),
         )
         self.canvas.tag_bind(
             self.btn_speech2image,
             "<Leave>",
-            lambda event: self.__get_moveOver_event(ID=3, event=str(event)),
+            lambda event: self._get_moveOver_event(ID=3, event=str(event)),
         )
 
-    def __relative_to_assets(self, *args: str) -> Path:
+    def _relative_to_assets(self, *args: str) -> Path:
         RELATIVE_PATH = None
 
         for arg in args:
@@ -242,7 +242,7 @@ class MainWindow:
 
         return PhotoImage(file=self.ASSETS_PATH / Path(RELATIVE_PATH))  # type: ignore
 
-    def __get_moveOver_event(self, ID: int, event: str):
+    def _get_moveOver_event(self, ID: int, event: str):
         if "Enter" in event:
             self.canvas.itemconfig(
                 self.bg, image=self.switcher[ID]["background_img"]

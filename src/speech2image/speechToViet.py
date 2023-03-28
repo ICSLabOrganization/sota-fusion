@@ -41,9 +41,9 @@ class SpeechToViet:
         self.processor = Wav2Vec2Processor.from_pretrained(self.LIB_PATH)
         self.model = Wav2Vec2ForCTC.from_pretrained(self.LIB_PATH)
 
-        return self.__loadSpeech(audio_path=audio_path)
+        return self._loadSpeech(audio_path=audio_path)
 
-    def __loadSpeech(self, audio_path: Union[str, Path]) -> str:
+    def _loadSpeech(self, audio_path: Union[str, Path]) -> str:
         y, _ = librosa.load(audio_path, sr=16000)
 
         # tokenize
