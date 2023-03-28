@@ -20,8 +20,8 @@ import stability_sdk.interfaces.gooseai.generation.generation_pb2 as generation 
 from PIL import Image
 from stability_sdk import client  # type: ignore
 
-# sys.path.append(str(Path(__file__).parent.parent))  # src folder
-from .._config import load_config
+sys.path.append(str(Path(__file__).parent.parent))  # src folder
+from _config import load_config
 
 
 class EngToImage:
