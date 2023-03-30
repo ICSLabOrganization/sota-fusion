@@ -8,6 +8,7 @@ speech-to-image:
 
   LIB :
     TRANSLATOR : "vinai/vinai-translate-vi2en"
-    RECOGNIZER : "wav2vec2-base-vietnamese-250h"
+    RECOGNIZER : "https://api-inference.huggingface.co/models/nguyenvulebinh/wav2vec2-base-vietnamese-250h"
+    RECOGNIZER_KEY : "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"
 
 style-transfer: 
