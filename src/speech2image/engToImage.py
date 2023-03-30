@@ -44,11 +44,11 @@ class EngToImage:
             engine="stable-diffusion-v1-5",  # Set the engine to use for generation.
             # Available engines: stable-diffusion-v1 stable-diffusion-v1-5 stable-diffusion-512-v2-0 stable-diffusion-768-v2-0 stable-inpainting-v1-0 stable-inpainting-512-v2-0
         )
-        img = self.__generateImage(en_inputText=en_inputText)
+        img = self._generateImage(en_inputText=en_inputText)
 
         return img
 
-    def __generateImage(self, en_inputText: str):
+    def _generateImage(self, en_inputText: str):
         answers = self.stability_api.generate(
             prompt=en_inputText,
             seed=random.randint(100000000, 998244353),

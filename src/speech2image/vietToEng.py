@@ -31,9 +31,9 @@ class VietToEng:
             self.config["LIB"]["TRANSLATOR"]
         )
 
-        return self.__translate_vi2en(vi_inputText=vi_inputText)
+        return self._translate_vi2en(vi_inputText=vi_inputText)
 
-    def __translate_vi2en(self, vi_inputText: str) -> str:
+    def _translate_vi2en(self, vi_inputText: str) -> str:
         input_ids = self.tokenizer_vi2en(
             vi_inputText, return_tensors="pt"
         ).input_ids

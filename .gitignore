@@ -1,5 +1,6 @@
 ###> ICSLabOrganization/SOTA_CV-App ###
 __pycache__
+ONNX_models
 ##### Folders #####
 build/
 dist/
