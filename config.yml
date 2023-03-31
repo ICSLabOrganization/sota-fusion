@@ -31,9 +31,12 @@ speech-to-image:
     STAB_HOST : "grpc.stability.ai:443"
     STAB_KEY  : "sk-cHfjUwInF8Uuds4AS77mGm3HQWuwXkl5N64o6XwfxkKVcWRh"
 
-  LIB :
-    TRANSLATOR : "vinai/vinai-translate-vi2en"
-    RECOGNIZER : "https://api-inference.huggingface.co/models/nguyenvulebinh/wav2vec2-base-vietnamese-250h"
-    RECOGNIZER_KEY : "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"
+  vietToEng:
+    URL: "https://api-inference.huggingface.co/models/vinai/vinai-translate-vi2en"
+    KEY : "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"
+  
+  speechToViet:
+    URL : "https://api-inference.huggingface.co/models/nguyenvulebinh/wav2vec2-base-vietnamese-250h"
+    KEY : "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"
 
 style-transfer: 

@@ -32,8 +32,8 @@ class SpeechToViet:
         self.AUDIO_PATH = ASSETS_PATH.joinpath(*["audio-test", "test1.wav"])
         # self.LIB_PATH = PARENT_PATH.joinpath("wav2vec2-base-vietnamese-250h")
         self.config = load_config(mode = "speech-to-image")
-        self.API_URL = self.config["LIB"]["RECOGNIZER"]
-        self.headers = {"Authorization": "Bearer " + self.config["LIB"]["RECOGNIZER_KEY"]}
+        self.API_URL = self.config["speechToViet"]["URL"]
+        self.headers = {"Authorization": "Bearer " + self.config["speechToViet"]["KEY"]}
 
     def __call__(self, audio_path: Union[str, Path] = None):  # type: ignore
         if audio_path is None:
@@ -53,7 +53,7 @@ class SpeechToViet:
 
 def main():
     speechToViet = SpeechToViet()
-    # print(speechToViet()) # turn on to test
+    print(speechToViet()) # turn on to test
 
 
 if __name__ == "__main__":

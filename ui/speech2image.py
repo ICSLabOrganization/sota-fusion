@@ -11,7 +11,7 @@ Copyright (c) 2023 ICSLab
 from __future__ import absolute_import, division, print_function
 
 from pathlib import Path
-from tkinter import Canvas, PhotoImage, Tk, Toplevel
+from tkinter import Canvas, PhotoImage, Tk, Toplevel, Entry
 
 
 class Speech2Image_window:
@@ -85,6 +85,9 @@ class Speech2Image_window:
         self.img_result = PhotoImage(
             file=self._relative_to_assets("speech2image", "init_result.png")
         )
+
+        self.entry_image = PhotoImage(
+            file=self._relative_to_assets("speech2image", "entry.png"))
         # self.img_result = PhotoImage(
         #     file="/home/tiendat/Workspace/Building_app/sota-fusion/src/speech2image/assets/output-images/output1.png"
         # )
@@ -134,13 +137,37 @@ class Speech2Image_window:
             332.0, 215.0, image=self.img_btnDelete
         )
 
-        self.textResult_canvas = self.canvas.create_text(
-            47.0,
-            94.0,
-            anchor="nw",
-            text="Two cute cats dancing",
-            fill="#000000",
-            font=("Caladea", 15 * -1),
+        # self.textResult_canvas = self.canvas.create_text(
+        #     47.0,
+        #     94.0,
+        #     anchor="nw",
+        #     text="A girl jumping",
+        #     fill="#000000",
+        #     font=("Caladea", 15 * -1),
+        # )
+
+        #text entry
+        self.entry_bg = self.canvas.create_image(
+            208.0,
+            139.0,
+            image=self.entry_image
+        )
+
+        self.entry = Entry(
+            self.canvas,
+            bd=0,
+            bg="#2d2d2d",
+            # fg="#000716",
+            fg="white",
+            highlightthickness=0,
+            insertbackground="white"
+        )
+    
+        self.entry.place(
+            x=52.0,
+            y=119.0,
+            width=312.0,
+            height=38.0
         )
 
         # initialize updating the loading animation
