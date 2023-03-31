@@ -80,9 +80,11 @@ class AsyncRequest_speech2text(Thread):
         self.viet2eng = VietToEng()
 
     def run(self):
-        vi_resultText = self.speech2viet(audio_path=self.resultRecord_path)
+        vi_resultText = str(self.speech2viet(audio_path=self.resultRecord_path))
+        logger.debug("Vietnamese output text: " + vi_resultText)
+        
         en_resultText = self.viet2eng(vi_inputText=vi_resultText)
-
+        logger.debug("English output text: " + en_resultText)
         # put to queue
         with lock:
             result_queue.put(en_resultText)

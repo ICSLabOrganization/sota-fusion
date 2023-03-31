@@ -32,7 +32,6 @@ class VietToEng:
         output = self._translate_vi2en(vi_inputText = vi_inputText)
 
         output = output[0]['generated_text']
-        # print(output)
 
         return output
 
