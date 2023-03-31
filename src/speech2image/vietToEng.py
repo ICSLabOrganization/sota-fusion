@@ -28,8 +28,11 @@ class VietToEng:
         self.headers = {"Authorization": "Bearer " + self.config["vietToEng"]["KEY"]}
 
     def __call__(self, vi_inputText) -> str:
-        # vi_inputText = vi_inputText.encode("utf-8")
-        output = self._translate_vi2en(vi_inputText = {"inputs": vi_inputText})
+        vi_inputText = vi_inputText.encode("utf-8")
+        output = self._translate_vi2en(vi_inputText = vi_inputText)
+
+        output = output[0]['generated_text']
+        # print(output)
 
         return output
 
