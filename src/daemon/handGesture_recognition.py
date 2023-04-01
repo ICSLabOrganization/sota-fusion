@@ -11,11 +11,9 @@ Copyright (c) 2023 ICSLab
 from __future__ import division, absolute_import
 
 import sys
-import csv
 import copy
 import itertools
 from math import degrees
-# from collections import Counter
 from collections import deque
 from pathlib import Path
 
@@ -40,19 +38,8 @@ def _loading_modelPath(model_type: str):
     
     return str(MODEL_PATH.joinpath(filename))
     
-# def _loading_labelPath(label_type: str, is_label: bool):
-#     if is_label:
-#         index = 0
-#     else:
-#         index = 1
-        
-#     filename = load_config(mode="daemon")["labels"][label_type][index]
-#     ROOT_DIR = Path(__file__).parents[2] #root directory
-#     MODEL_PATH = ROOT_DIR.joinpath(*["assets", "ONNX_models", label_type])
-    
-#     return str(MODEL_PATH.joinpath(filename))
 
-class HandGesture_regcognition:
+class HandGesture_recognition:
     def __init__(self):
         self.config = load_config(mode="daemon")
         
@@ -65,28 +52,8 @@ class HandGesture_regcognition:
         self.min_detection_confidence = self.config["min_detection_confidence"]
         self.lines_hand               = self.config["lines_hand"]
         
-        # label reading ##########################################################
-        # with open(
-        #     # 'model/keypoint_classifier/keypoint_classifier_label.csv',
-        #     _loading_labelPath(label_type="keypoint_classifier", is_label=True),
-        #     encoding='utf-8-sig',
-        # ) as f:
-        #     keypoint_classifier_labels = csv.reader(f)
-        #     keypoint_classifier_labels = [
-        #         row[0] for row in keypoint_classifier_labels
-        #     ]
-        # with open(
-        #     # 'model/point_history_classifier/point_history_classifier_label.csv',
-        #     _loading_labelPath(label_type="point_history_classifier", is_label=True),
-        #     encoding='utf-8-sig',
-        # ) as f:
-        #     self.point_history_classifier_labels = csv.reader(f)
-        #     self.point_history_classifier_labels = [
-        #         row[0] for row in self.point_history_classifier_labels
-        #     ]
-
         # Coordinate history #####################################################
-        self.history_length           = 10
+        self.history_length           = 3 
         self.point_history            = {}
         self.pre_point_history        = {}
 
@@ -359,49 +326,10 @@ class HandGesture_regcognition:
                         :
                 ]
                 """
-                # 人差し指軌跡を相対座標へ変換
-                # pre_processed_point_histories = self._pre_process_point_history(
-                #     image_width=debug_image.shape[1],
-                #     image_height=debug_image.shape[0],
-                #     point_history=self.point_history,
-                # )
-
-                # 学習データ保存
-                # self._logging_csv(
-                #     number,
-                #     mode,
-                #     trackid,
-                #     pre_processed_landmark,
-                #     pre_processed_point_histories,
-                # )
                 #separate function
                 self.__keypoint_classifier(pre_processed_landmarks=pre_processed_landmarks,
                                            palm_trackid_box_x1y1s=palm_trackid_box_x1y1s,
                                            hand_landmarks=hand_landmarks)
-                
-                # classifier_label, text_x, text_y = self.__point_history_classifier(palm_trackid_box_x1y1s=palm_trackid_box_x1y1s,
-                #                                                                    pre_processed_point_histories=pre_processed_point_histories)
-                
-                # cv.putText(
-                #     debug_image,
-                #     f'{classifier_label}',
-                #     (text_x, text_y),
-                #     cv.FONT_HERSHEY_SIMPLEX,
-                #     0.8,
-                #     (0,0,0),
-                #     2,
-                #     cv.LINE_AA,
-                # )
-                # cv.putText(
-                #     debug_image,
-                #     f'{classifier_label}',
-                #     (text_x, text_y),
-                #     cv.FONT_HERSHEY_SIMPLEX,
-                #     0.8,
-                #     (59,255,255),
-                #     1,
-                #     cv.LINE_AA,
-                # )
                 
             else:
                 self.point_history = {}
@@ -424,58 +352,7 @@ class HandGesture_regcognition:
             else:
                 self.point_history[trackid].append([0, 0])
 
-        # return palm_trackid_box_x1y1s
-        
-    # def __point_history_classifier(self, palm_trackid_box_x1y1s, pre_processed_point_histories):
-    #     """
-    #     人差し指の軌跡が表示上に残り続けるのを割けるため
-    #     トラッキング対象外になった(画角から外れた)手のひらがある場合は人差指XY座標の履歴をクリアする
-    #     今回の全ての軌跡座標と前回の全ての軌跡座標が完全に一致したtrackidの履歴情報は変化なしと断定して履歴から削除する
-    #     point_history: 最新の軌跡16点
-    #     pre_point_history: 前回の軌跡16点
-    #     """
-    #     classifier_label, text_x, text_y = None, None, None #for prevent unbounded
-        
-    #     if len(self.pre_point_history) > 0:
-    #         temp_point_history = copy.deepcopy(self.point_history)
-    #         for track_id, points in temp_point_history.items():
-    #             if track_id in self.pre_point_history:
-    #                 pre_points = self.pre_point_history[track_id]
-    #                 if points == pre_points:
-    #                     _ = self.point_history.pop(track_id, None)
-    #     self.pre_point_history = copy.deepcopy(self.point_history)
 
-    #     # Finger Gesture Classification - Batch Processing
-    #     finger_gesture_ids = None
-    #     temp_trackid_x1y1s = {}
-    #     temp_pre_processed_point_history = []
-    #     for (trackid, x1y1), pre_processed_point_history in zip(palm_trackid_box_x1y1s.items(), pre_processed_point_histories):
-    #         point_history_len = len(pre_processed_point_history)
-    #         if point_history_len > 0 and point_history_len % (self.history_length * 2) == 0:
-    #             temp_trackid_x1y1s[trackid] = x1y1
-    #             temp_pre_processed_point_history.append(pre_processed_point_history)
-    #     if len(temp_pre_processed_point_history) > 0:
-    #         finger_gesture_ids = self.point_history_classifier(
-    #             temp_pre_processed_point_history,
-    #         )
-
-    #     # 直近検出の中で最多のジェスチャーIDを算出
-    #     if finger_gesture_ids is not None:
-    #         for (trackid, x1y1), finger_gesture_id in zip(temp_trackid_x1y1s.items(), finger_gesture_ids):
-    #             x1, y1 = x1y1
-    #             trackid_str = str(trackid)
-    #             self.finger_gesture_history.setdefault(trackid_str, deque(maxlen=self.gesture_history_length))
-    #             self.finger_gesture_history[trackid_str].append(int(finger_gesture_id))
-    #             most_common_fg_id = Counter(self.finger_gesture_history[trackid_str]).most_common()
-    #             text_x = max(x1, 10)
-    #             text_x = min(text_x, self.width-120)
-    #             text_y = max(y1-45, 20)
-    #             text_y = min(text_y, self.height-45)
-    #             classifier_label = self.point_history_classifier_labels[most_common_fg_id[0][0]] # type: ignore
-    #             # print(f'trackid: {trackid} [x1,y1]: [{x1},{y1}] finger_gesture_id: {classifier_label}')
-
-    #     return classifier_label, text_x, text_y
-    
     def _select_mode(self, key, mode, auto=False, prev_number=-1):
         number = -1
         if 48 <= key <= 57:  # 0 ~ 9
@@ -520,129 +397,6 @@ class HandGesture_regcognition:
 
         temp_landmark_list = list(map(normalize_, temp_landmark_list))
         return temp_landmark_list
-
-
-    # def __pre_process_point_history(
-    #     self,
-    #     image_width: int,
-    #     image_height: int,
-    #     point_history: dict,
-    # ):
-    #     """pre_process_point_history
-
-    #     Parameters
-    #     ----------
-    #     image_width: int
-    #         Input image width
-
-    #     image_height: int
-    #         Input image height
-
-    #     point_history: dict
-    #         Index finger XY coordinate history per trackid (detected palm)
-    #         {
-    #             int(trackid1): [[x, y],[x, y],[x, y],[x, y], ...],
-    #             int(trackid2): [[x, y],[x, y], ...],
-    #             int(trackid3): [[x, y],[x, y],[x, y], ...],
-    #                 :
-    #         }
-
-    #     Returns
-    #     -------
-    #     relative_coordinate_list_by_trackid: List
-    #         [
-    #             [rx, ry, rx, ry, rx, ry, rx, ry, ...],
-    #             [rx, ry, rx, ry, ...],
-    #             [rx, ry, rx, ry, rx, ry, ...],
-    #                 :
-    #         ]
-    #     """
-    #     if len(point_history) == 0:
-    #         return []
-
-    #     temp_point_history = copy.deepcopy(point_history)
-    #     relative_coordinate_list_by_trackid = []
-
-    #     # trackidごとに相対座標へ変換
-    #     for trackid, points in temp_point_history.items():
-    #         base_x, base_y = points[0][0], points[0][1]
-    #         relative_coordinate_list = [
-    #             [
-    #                 (point[0] - base_x) / image_width,
-    #                 (point[1] - base_y) / image_height,
-    #             ] for point in points
-    #         ]
-    #         # 1次元リストに変換
-    #         relative_coordinate_list_1d = list(
-    #             itertools.chain.from_iterable(relative_coordinate_list)
-    #         )
-    #         relative_coordinate_list_by_trackid.append(relative_coordinate_list_1d)
-    #     return relative_coordinate_list_by_trackid
-
-
-    # def __logging_csv(self, number, mode, trackid, landmark_list, point_histories):
-    #     if mode == 0:
-    #         pass
-    #     if mode == 1 and (0 <= number <= 9):
-    #         # csv_path = 'model/keypoint_classifier/keypoint.csv'
-    #         csv_path = _loading_labelPath(label_type="keypoint_classifier", is_label=False)
-    #         with open(csv_path, 'a', newline="") as f:
-    #             writer = csv.writer(f)
-    #             writer.writerow([number, trackid, *landmark_list])
-    #     if mode == 2 and (0 <= number <= 9):
-    #         # csv_path = 'model/point_history_classifier/point_history.csv'
-    #         csv_path = _loading_labelPath(label_type="point_history_classifier", is_label=False)
-    #         with open(csv_path, 'a', newline="") as f:
-    #             writer = csv.writer(f)
-    #             for point_history in point_histories:
-    #                 writer.writerow([number, trackid, *point_history])
-
-
-    # def __draw_info_text(
-    #     self, 
-    #     image,
-    #     brect,
-    #     handedness,
-    #     hand_sign_text,
-    #     finger_gesture_text
-    # ):
-    #     info_text = handedness
-    #     if hand_sign_text != "":
-    #         info_text = f'{handedness}:{hand_sign_text}'
-    #     cv.putText(
-    #         image,
-    #         info_text,
-    #         (brect[0] + 5, brect[1] - 4),
-    #         cv.FONT_HERSHEY_SIMPLEX,
-    #         0.6,
-    #         (255, 255, 255),
-    #         1,
-    #         cv.LINE_AA,
-    #     )
-
-    #     if finger_gesture_text != "":
-    #         cv.putText(
-    #             image,
-    #             f'Finger Gesture:{finger_gesture_text}',
-    #             (10, 60),
-    #             cv.FONT_HERSHEY_SIMPLEX,
-    #             1.0,
-    #             (0, 0, 0),
-    #             4,
-    #             cv.LINE_AA,
-    #         )
-    #         cv.putText(
-    #             image,
-    #             f'Finger Gesture:{finger_gesture_text}',
-    #             (10, 60),
-    #             cv.FONT_HERSHEY_SIMPLEX,
-    #             1.0,
-    #             (255, 255, 255),
-    #             2,
-    #             cv.LINE_AA,
-    #         )
-
-    #     return image
 
 
     def _draw_point_history(self, image, point_history):
