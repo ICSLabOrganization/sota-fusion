@@ -82,9 +82,9 @@ class EngToImage:
 
 
 def main():
-    # engToImage = EngToImage()
-    # engToImage(en_inputText="two cats are dancing")
-    print("Press")
+    engToImage = EngToImage()
+    engToImage(en_inputText="two cats are dancing")
+    # print("Press")
 
 
 if __name__ == "__main__":

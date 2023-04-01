@@ -16,10 +16,11 @@ import threading
 import time
 from pathlib import Path
 from threading import Thread
+import tkinter
 from tkinter import Image, Tk
 
 from loguru import logger  # type: ignore
-from PIL import ImageTk
+from PIL import ImageTk, Image
 
 sys.path.append(str(Path(__file__).parent.parent))  # root directory
 from mainWindow import MainWindow # noqa: E402
@@ -79,9 +80,11 @@ class AsyncRequest_speech2text(Thread):
         self.viet2eng = VietToEng()
 
     def run(self):
-        vi_resultText = self.speech2viet(audio_path=self.resultRecord_path)
+        vi_resultText = str(self.speech2viet(audio_path=self.resultRecord_path))
+        logger.debug("Vietnamese output text: " + vi_resultText)
+        
         en_resultText = self.viet2eng(vi_inputText=vi_resultText)
-
+        logger.debug("English output text: " + en_resultText)
         # put to queue
         with lock:
             result_queue.put(en_resultText)
@@ -222,9 +225,7 @@ class Speech2Image_extend(Speech2Image_window):
                 self.enter_loading_status()
 
                 # create thread for generate image (long-term task) and for getting value from queue
-                en_inputText = self.canvas.itemcget(
-                    self.textResult_canvas, "text"
-                )
+                en_inputText = self.entry.get()
 
                 generateImg_thread = AsyncRequest_text2image(
                     input_text=en_inputText
@@ -236,9 +237,7 @@ class Speech2Image_extend(Speech2Image_window):
 
         elif ID == 2:  # delete button
             if self.loading_state is False:
-                self.canvas.itemconfig(
-                    self.textResult_canvas, text=""  # empty string
-                )
+                self.entry.delete(0, tkinter.END)
 
         elif ID == 3:  # record button
             if self.loading_state is False:
@@ -328,9 +327,8 @@ class Speech2Image_extend(Speech2Image_window):
                 logger.info("Text not found")
 
             else:
-                self.canvas.itemconfig(
-                    self.textResult_canvas, text=new_resultText
-                )
+                self.entry.delete(0, tkinter.END)
+                self.entry.insert(0, new_resultText)
 
                 logger.debug("Text updated")
 

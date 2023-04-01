@@ -270,7 +270,7 @@ class HandGesture_regcognition:
         # mode
         ):
         
-        trackid, pre_processed_landmark = None, None #for prevent unbounded
+        trackid, pre_processed_landmark, hand_landmarks= None, None, None #for prevent unbounded
         
         if len(cropted_rotated_hands_images) > 0:
 
@@ -374,7 +374,6 @@ class HandGesture_regcognition:
                 #     pre_processed_landmark,
                 #     pre_processed_point_histories,
                 # )
-
                 #separate function
                 self.__keypoint_classifier(pre_processed_landmarks=pre_processed_landmarks,
                                            palm_trackid_box_x1y1s=palm_trackid_box_x1y1s,
@@ -403,13 +402,15 @@ class HandGesture_regcognition:
                 #     1,
                 #     cv.LINE_AA,
                 # )
+                
             else:
                 self.point_history = {}
 
         else:
             self.point_history = {}
 
-
+        return hand_landmarks
+        
     def __keypoint_classifier(self, pre_processed_landmarks, palm_trackid_box_x1y1s, hand_landmarks,):
         # ハンドサイン分類 - バッチ処理
         hand_sign_ids = self.keypoint_classifier(

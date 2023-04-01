@@ -11,9 +11,9 @@ Copyright (c) 2023 ICSLab
 from __future__ import absolute_import, division, print_function
 
 import sys
+import requests
 from pathlib import Path
-
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer  # type: ignore
+# from transformers import AutoModelForSeq2SeqLM, AutoTokenizer  # type: ignore
 
 sys.path.append(str(Path(__file__).parent.parent))  # src folder
 from _config import load_config  # noqa: E402
@@ -23,42 +23,27 @@ class VietToEng:
     def __init__(self):
         self.config = load_config(mode="speech-to-image")
 
-    def __call__(self, vi_inputText: str) -> str:
-        self.tokenizer_vi2en = AutoTokenizer.from_pretrained(
-            self.config["LIB"]["TRANSLATOR"], src_lang="vi_VN"
-        )
-        self.model_vi2en = AutoModelForSeq2SeqLM.from_pretrained(
-            self.config["LIB"]["TRANSLATOR"]
-        )
+        self.config = load_config(mode = "speech-to-image")
+        self.API_URL = self.config["vietToEng"]["URL"]
+        self.headers = {"Authorization": "Bearer " + self.config["vietToEng"]["KEY"]}
 
-        return self._translate_vi2en(vi_inputText=vi_inputText)
+    def __call__(self, vi_inputText) -> str:
+        vi_inputText = vi_inputText.encode("utf-8")
+        output = self._translate_vi2en(vi_inputText = vi_inputText)
 
-    def _translate_vi2en(self, vi_inputText: str) -> str:
-        input_ids = self.tokenizer_vi2en(
-            vi_inputText, return_tensors="pt"
-        ).input_ids
-        output_ids = self.model_vi2en.generate(
-            input_ids,
-            do_sample=True,
-            max_new_tokens=1024,
-            top_k=100,
-            top_p=0.8,
-            decoder_start_token_id=self.tokenizer_vi2en.lang_code_to_id[
-                "en_XX"
-            ],
-            num_return_sequences=1,
-        )
-        en_text = self.tokenizer_vi2en.batch_decode(
-            output_ids, skip_special_tokens=True
-        )
-        en_text = " ".join(en_text)
+        output = output[0]['generated_text']
 
-        return en_text
+        return output
+
+    def _translate_vi2en(self, vi_inputText: dict) -> str:
+        reponse = requests.post(self.API_URL, headers=self.headers, data=vi_inputText)
+        
+        return reponse.json()
 
 
 def main():
     vietToEng = VietToEng()
-    vietToEng(vi_inputText="")
+    vietToEng(vi_inputText="Hai con mèo đang bơi")
 
 
 if __name__ == "__main__":

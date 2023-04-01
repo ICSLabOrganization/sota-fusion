@@ -61,7 +61,7 @@ class VirtualControlTask(HandGesture_regcognition):
             # detection #################################################
             cropted_rotated_hands_images, rects, palm_trackid_box_x1y1s, not_rotate_rects= self._palm_detection(image=image, debug_image=debug_image)
 
-            self._hand_landmark(cropted_rotated_hands_images=cropted_rotated_hands_images,
+            hand_landmarks = self._hand_landmark(cropted_rotated_hands_images=cropted_rotated_hands_images,
                                 rects=rects,
                                 debug_image=debug_image,
                                 palm_trackid_box_x1y1s=palm_trackid_box_x1y1s,
@@ -74,7 +74,7 @@ class VirtualControlTask(HandGesture_regcognition):
             debug_image = self._draw_info(debug_image, fps, mode, number, auto)
 
             # print(self.point_history)
-            print(self.palm_trackid_cxcy)
+            # print(hand_landmarks)
             
             # screen showing #############################################################
             cv.imshow('Hand Gesture Recognition', debug_image)

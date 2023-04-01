@@ -14,6 +14,7 @@ from typing import Union
 
 import librosa  # type: ignore
 import torch  # type: ignore
+import requests
 from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor  # type: ignore
 
 import sys
@@ -31,39 +32,28 @@ class SpeechToViet:
         self.AUDIO_PATH = ASSETS_PATH.joinpath(*["audio-test", "test1.wav"])
         # self.LIB_PATH = PARENT_PATH.joinpath("wav2vec2-base-vietnamese-250h")
         self.config = load_config(mode = "speech-to-image")
-        self.LIB_PATH = self.config["LIB"]["RECOGNIZER"]
+        self.API_URL = self.config["speechToViet"]["URL"]
+        self.headers = {"Authorization": "Bearer " + self.config["speechToViet"]["KEY"]}
 
     def __call__(self, audio_path: Union[str, Path] = None):  # type: ignore
         if audio_path is None:
             audio_path = self.AUDIO_PATH
 
         # load model and tokenizer
-        self.processor = Wav2Vec2Processor.from_pretrained(self.LIB_PATH)
-        self.model = Wav2Vec2ForCTC.from_pretrained(self.LIB_PATH)
+        output = self.__loadSpeech(audio_path=audio_path)
 
-        return self._loadSpeech(audio_path=audio_path)
+        return output['text']
 
-    def _loadSpeech(self, audio_path: Union[str, Path]) -> str:
-        y, _ = librosa.load(audio_path, sr=16000)
-
-        # tokenize
-        input_values = self.processor(
-            y, return_tensors="pt", padding="longest"
-        ).input_values  # Batch size 1
-
-        # retrieve logits
-        logits = self.model(input_values).logits
-
-        # take argmax and decode
-        predicted_ids = torch.argmax(logits, dim=-1)
-        transcription = self.processor.batch_decode(predicted_ids)
-
-        return transcription[0]
+    def __loadSpeech(self, audio_path: Union[str, Path]) -> str:
+        with open(audio_path, "rb") as f:
+            data = f.read()
+        response = requests.post(self.API_URL, headers=self.headers, data=data)
+        return response.json()
 
 
 def main():
     speechToViet = SpeechToViet()
-    speechToViet()
+    print(speechToViet()) # turn on to test
 
 
 if __name__ == "__main__":
