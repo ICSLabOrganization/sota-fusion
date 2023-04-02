@@ -2,40 +2,40 @@ import pygame
 import os
 import random
 from pathlib import Path
-pygame.init()
+pygame.init()   
 
 # Global Constants
 SCREEN_HEIGHT = 600
 SCREEN_WIDTH = 1100
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-c = [i for i in Path.iterdir(Path(__file__).parent)]
-d = [i for i in Path.iterdir(c[1])]
+PARENTPATH = Path(__file__).parent
+ASSETSPATH = PARENTPATH.joinpath(*["assets"])
 
-dino = [i for i in Path.iterdir(d[2])]
-cactus = [i for i in Path.iterdir(d[1])]
-bird = [i for i in Path.iterdir(d[0])]
-bg = [i for i in Path.iterdir(d[3])]
+BIRDPATH = ASSETSPATH.joinpath(*["Bird"])
+CACTUSPATH = ASSETSPATH.joinpath(*["Cactus"])
+DINOPATH = ASSETSPATH.joinpath(*["Dino"])
+BGPATH = ASSETSPATH.joinpath(*["Other"])
 
-RUNNING = [pygame.image.load(dino[4]),
-           pygame.image.load(dino[5])]
+RUNNING = [pygame.image.load(DINOPATH.joinpath(*["DinoRun1.png"])),
+           pygame.image.load(DINOPATH.joinpath(*["DinoRun2.png"]))]
+JUMPING = pygame.image.load(DINOPATH.joinpath(*["DinoJump.png"]))
 
-JUMPING = pygame.image.load(dino[3])
+DUCKING = [pygame.image.load(DINOPATH.joinpath(*["DinoDuck1.png"])),
+           pygame.image.load(DINOPATH.joinpath(*["DinoDuck2.png"]))]
 
-DUCKING = [pygame.image.load(dino[1]),
-            pygame.image.load(dino[2])]
+SMALL_CACTUS = [pygame.image.load(CACTUSPATH.joinpath(*["SmallCactus1.png"])),
+                pygame.image.load(CACTUSPATH.joinpath(*["SmallCactus2.png"])),
+                pygame.image.load(CACTUSPATH.joinpath(*["SmallCactus3.png"]))]
 
-SMALL_CACTUS = [pygame.image.load(cactus[3]),
-                pygame.image.load(cactus[4]),
-                pygame.image.load(cactus[5])]
-LARGE_CACTUS = [pygame.image.load(cactus[0]),
-                pygame.image.load(cactus[1]),
-                pygame.image.load(cactus[2])]
+LARGE_CACTUS = [pygame.image.load(CACTUSPATH.joinpath(*["LargeCactus1.png"])),
+                pygame.image.load(CACTUSPATH.joinpath(*["LargeCactus2.png"])),
+                pygame.image.load(CACTUSPATH.joinpath(*["LargeCactus3.png"]))]
 
-BIRD = [pygame.image.load(i) for i in bird]
+BIRD = [pygame.image.load(i) for i in BIRDPATH.iterdir()]
 
-CLOUD = pygame.image.load(bg[0])
+CLOUD = pygame.image.load(BGPATH.joinpath(*["Cloud.png"]))
 
-BG = pygame.image.load(bg[-1])
+BG = pygame.image.load(BGPATH.joinpath(*["Track.png"]))
 
 
 class Dinosaur:
@@ -212,7 +212,6 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
 
-
         SCREEN.fill((255, 255, 255))
         userInput = pygame.key.get_pressed()
 
@@ -244,7 +243,7 @@ def main():
 
         clock.tick(30)
         pygame.display.update()
-        pygame.quit()
+    pygame.quit()
 
 
 def menu(death_count):
