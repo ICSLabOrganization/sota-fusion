@@ -10,23 +10,31 @@ Copyright (c) 2023 ICSLab
 """
 from __future__ import absolute_import, division, print_function
 
-import sys
 import queue
-import tkinter
+import sys
 import threading
-from pathlib import Path
+import tkinter
 from multiprocessing import Process
+from pathlib import Path
 from threading import Thread
 from tkinter import Image, Tk
+
 from loguru import logger  # type: ignore
-from PIL import ImageTk, Image #type: ignore
+from PIL import Image, ImageTk  # noqa: F811
 
 sys.path.append(str(Path(__file__).parent.parent))  # root directory
 
-from mainWindow import MainWindow # noqa: E402
+from mainWindow import MainWindow  # noqa: E402
 from speech2image import Speech2Image_window  # noqa: E402
 from style_transfer import StyleTransfer_window  # noqa: E402
-from src import EngToImage, SpeechToViet, VietToEng, recording, VirtualControl  # noqa: E402
+
+from src import (  # noqa: E402
+    EngToImage,
+    SpeechToViet,
+    VietToEng,
+    VirtualControl,
+    recording,
+)
 
 # create lock for prevent race condition
 lock = threading.Lock()
@@ -47,14 +55,14 @@ class Process_virtualControlTask(Process):
 class Process_mainTask(Process):
     def __init__(self):
         super().__init__()
-        
+
     def run(self):
         root = Tk()
-        #send window to front of all windows
-        root.attributes("-topmost", True)        
-        
+        # send window to front of all windows
+        root.attributes("-topmost", True)
+
         mainWindow = Client(root)
-        root.protocol('WM_DELETE_WINDOW', mainWindow.on_exit)
+        root.protocol("WM_DELETE_WINDOW", mainWindow.on_exit)
         root.mainloop()
 
 
@@ -94,9 +102,11 @@ class Thread_speech2text(Thread):
         self.viet2eng = VietToEng()
 
     def run(self):
-        vi_resultText = str(self.speech2viet(audio_path=self.resultRecord_path))
+        vi_resultText = str(
+            self.speech2viet(audio_path=self.resultRecord_path)
+        )
         logger.debug("Vietnamese output text: " + vi_resultText)
-        
+
         en_resultText = self.viet2eng(vi_inputText=vi_resultText)
         logger.debug("English output text: " + en_resultText)
         # put to queue
@@ -107,7 +117,7 @@ class Thread_speech2text(Thread):
 class Client(MainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
+
         self.binding_button_click()
 
     def binding_button_click(self):
@@ -244,9 +254,7 @@ class Speech2Image_extend(Speech2Image_window):
                 # create thread for generate image (long-term task) and for getting value from queue
                 en_inputText = self.entry.get()
 
-                generateImg_thread = Thread_text2image(
-                    input_text=en_inputText
-                )
+                generateImg_thread = Thread_text2image(input_text=en_inputText)
                 # generateImg_thread = AsyncTask_test()
                 generateImg_thread.start()
 
@@ -353,11 +361,11 @@ class Speech2Image_extend(Speech2Image_window):
 if __name__ == "__main__":
     process_virtualControlTask = Process_virtualControlTask()
     process_mainTask = Process_mainTask()
-    
-    #start two processes
+
+    # start two processes
     process_virtualControlTask.start()
     process_mainTask.start()
-    
-    #wait for process to finish
+
+    # wait for process to finish
     process_virtualControlTask.join()
     process_mainTask.join()

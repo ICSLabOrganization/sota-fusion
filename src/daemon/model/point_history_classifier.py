@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 
-import onnxruntime
+from typing import List, Optional
+
 import numpy as np
-from typing import (
-    Optional,
-    List,
-)
+import onnxruntime
 
 
 class PointHistoryClassifier(object):
     def __init__(
         self,
-        model_path: Optional[str] = 'model/point_history_classifier/point_history_classifier_lstm.onnx',
+        model_path: Optional[
+            str
+        ] = "model/point_history_classifier/point_history_classifier_lstm.onnx",
         providers: Optional[List] = [
             # (
             #     'TensorrtExecutionProvider', {
@@ -20,8 +20,8 @@ class PointHistoryClassifier(object):
             #         'trt_fp16_enable': True,
             #     }
             # ),
-            'CUDAExecutionProvider',
-            'CPUExecutionProvider',
+            "CUDAExecutionProvider",
+            "CPUExecutionProvider",
         ],
         score_th=0.5,
     ):
@@ -67,7 +67,6 @@ class PointHistoryClassifier(object):
             output.name for output in self.onnx_session.get_outputs()
         ]
         self.score_th = np.asarray(score_th, dtype=np.float32)
-
 
     def __call__(
         self,

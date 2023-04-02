@@ -21,7 +21,7 @@ from PIL import Image
 from stability_sdk import client  # type: ignore
 
 sys.path.append(str(Path(__file__).parent.parent))  # src folder
-from _config import load_config
+from _config import load_config  # noqa: E402
 
 
 class EngToImage:

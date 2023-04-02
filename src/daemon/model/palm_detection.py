@@ -1,28 +1,18 @@
 import copy
-from typing import (
-    Tuple,
-    Optional,
-    List,
-)
-from math import (
-    sin,
-    cos,
-    atan2,
-    pi,
-)
-import onnxruntime
-import numpy as np
+from math import atan2, cos, pi, sin
+from typing import List, Optional, Tuple
 
-from utils.utils import (
-    normalize_radians,
-    keep_aspect_resize_and_pad,
-)
+import numpy as np
+import onnxruntime
+from utils.utils import keep_aspect_resize_and_pad, normalize_radians
 
 
 class PalmDetection(object):
     def __init__(
         self,
-        model_path: Optional[str] = 'model/palm_detection/palm_detection_full_inf_post_192x192.onnx',
+        model_path: Optional[
+            str
+        ] = "model/palm_detection/palm_detection_full_inf_post_192x192.onnx",
         score_threshold: Optional[float] = 0.60,
         providers: Optional[List] = [
             # (
@@ -32,8 +22,8 @@ class PalmDetection(object):
             #         'trt_fp16_enable': True,
             #     }
             # ),
-            'CUDAExecutionProvider',
-            'CPUExecutionProvider',
+            "CUDAExecutionProvider",
+            "CPUExecutionProvider",
         ],
     ):
         """PalmDetection
@@ -85,7 +75,6 @@ class PalmDetection(object):
         ]
         self.square_standard_size = 0
 
-
     def __call__(
         self,
         image: np.ndarray,
@@ -125,11 +114,10 @@ class PalmDetection(object):
 
         return hands
 
-
     def __preprocess(
         self,
         image: np.ndarray,
-        swap: Optional[Tuple[int,int,int]] = (2, 0, 1),
+        swap: Optional[Tuple[int, int, int]] = (2, 0, 1),
     ) -> np.ndarray:
         """__preprocess
 
@@ -152,7 +140,7 @@ class PalmDetection(object):
         # Resize + Padding + Normalization + BGR->RGB
         input_h = self.input_shapes[0][2]
         input_w = self.input_shapes[0][3]
-        image_height , image_width = image.shape[:2]
+        image_height, image_width = image.shape[:2]
 
         self.square_standard_size = max(image_height, image_width)
         self.square_padding_half_size = abs(image_height - image_width) // 2
@@ -178,7 +166,6 @@ class PalmDetection(object):
         )
         return padded_image
 
-
     def __postprocess(
         self,
         image: np.ndarray,
@@ -202,10 +189,12 @@ class PalmDetection(object):
             sqn_rr_size, rotation, sqn_rr_center_x, sqn_rr_center_y
         """
         image_height = image.shape[0]
-        image_width = image.shape[1]
+        # image_width = image.shape[1]
 
         hands = []
-        keep = boxes[:, 0] > self.score_threshold # pd_score > self.score_threshold
+        keep = (
+            boxes[:, 0] > self.score_threshold
+        )  # pd_score > self.score_threshold
         boxes = boxes[keep, :]
 
         for box in boxes:
@@ -216,9 +205,12 @@ class PalmDetection(object):
                 sqn_rr_size = 2.9 * box_size
                 rotation = 0.5 * pi - atan2(-kp02_y, kp02_x)
                 rotation = normalize_radians(rotation)
-                sqn_rr_center_x = box_x + 0.5*box_size*sin(rotation)
-                sqn_rr_center_y = box_y - 0.5*box_size*cos(rotation)
-                sqn_rr_center_y = (sqn_rr_center_y * self.square_standard_size - self.square_padding_half_size) / image_height
+                sqn_rr_center_x = box_x + 0.5 * box_size * sin(rotation)
+                sqn_rr_center_y = box_y - 0.5 * box_size * cos(rotation)
+                sqn_rr_center_y = (
+                    sqn_rr_center_y * self.square_standard_size
+                    - self.square_padding_half_size
+                ) / image_height
                 hands.append(
                     [
                         sqn_rr_size,

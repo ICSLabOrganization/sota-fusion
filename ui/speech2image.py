@@ -11,7 +11,7 @@ Copyright (c) 2023 ICSLab
 from __future__ import absolute_import, division, print_function
 
 from pathlib import Path
-from tkinter import Canvas, PhotoImage, Tk, Toplevel, Entry
+from tkinter import Canvas, Entry, PhotoImage, Tk, Toplevel
 
 
 class Speech2Image_window:
@@ -87,8 +87,9 @@ class Speech2Image_window:
         )
 
         self.entry_image = PhotoImage(
-            file=self._relative_to_assets("speech2image", "entry.png"))
-        
+            file=self._relative_to_assets("speech2image", "entry.png")
+        )
+
         # frames of loading gif
         _frame_count = 8  # magic number
         self.loading_frames = [
@@ -135,11 +136,9 @@ class Speech2Image_window:
             332.0, 215.0, image=self.img_btnDelete
         )
 
-        #text entry
+        # text entry
         self.entry_bg = self.canvas.create_image(
-            208.0,
-            139.0,
-            image=self.entry_image
+            208.0, 139.0, image=self.entry_image
         )
 
         self.entry = Entry(
@@ -149,15 +148,10 @@ class Speech2Image_window:
             # fg="#000716",
             fg="white",
             highlightthickness=0,
-            insertbackground="white"
+            insertbackground="white",
         )
-    
-        self.entry.place(
-            x=52.0,
-            y=119.0,
-            width=312.0,
-            height=38.0
-        )
+
+        self.entry.place(x=52.0, y=119.0, width=312.0, height=38.0)
 
         # initialize updating the loading animation
         self.canvas.after(0, self._update_animation, 0)

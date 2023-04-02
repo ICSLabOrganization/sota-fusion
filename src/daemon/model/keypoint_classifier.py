@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 
-import onnxruntime
+from typing import List, Optional
+
 import numpy as np
-from typing import (
-    Optional,
-    List,
-)
+import onnxruntime
+
 
 class KeyPointClassifier(object):
     def __init__(
         self,
-        model_path: Optional[str] = 'model/keypoint_classifier/keypoint_classifier.onnx',
+        model_path: Optional[
+            str
+        ] = "model/keypoint_classifier/keypoint_classifier.onnx",
         providers: Optional[List] = [
             # (
             #     'TensorrtExecutionProvider', {
@@ -19,8 +20,8 @@ class KeyPointClassifier(object):
             #         'trt_fp16_enable': True,
             #     }
             # ),
-            'CUDAExecutionProvider',
-            'CPUExecutionProvider',
+            "CUDAExecutionProvider",
+            "CPUExecutionProvider",
         ],
     ):
         """KeyPointClassifier
@@ -64,7 +65,6 @@ class KeyPointClassifier(object):
         self.output_names = [
             output.name for output in self.onnx_session.get_outputs()
         ]
-
 
     def __call__(
         self,

@@ -9,17 +9,17 @@ Copyright (c) 2023 ICSLab
 """
 from __future__ import absolute_import, division, print_function
 
+import sys
 from pathlib import Path
 from typing import Union
 
 import librosa  # type: ignore
-import torch  # type: ignore
 import requests
+import torch  # type: ignore
 from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor  # type: ignore
 
-import sys
 sys.path.append(str(Path(__file__).parent.parent))  # src folder
-from _config import load_config
+from _config import load_config  # noqa: E402
 
 
 class SpeechToViet:
@@ -31,9 +31,11 @@ class SpeechToViet:
 
         self.AUDIO_PATH = ASSETS_PATH.joinpath(*["audio-test", "test1.wav"])
         # self.LIB_PATH = PARENT_PATH.joinpath("wav2vec2-base-vietnamese-250h")
-        self.config = load_config(mode = "speech-to-image")
+        self.config = load_config(mode="speech-to-image")
         self.API_URL = self.config["speechToViet"]["URL"]
-        self.headers = {"Authorization": "Bearer " + self.config["speechToViet"]["KEY"]}
+        self.headers = {
+            "Authorization": "Bearer " + self.config["speechToViet"]["KEY"]
+        }
 
     def __call__(self, audio_path: Union[str, Path] = None):  # type: ignore
         if audio_path is None:
@@ -42,7 +44,7 @@ class SpeechToViet:
         # load model and tokenizer
         output = self.__loadSpeech(audio_path=audio_path)
 
-        return output['text']
+        return output["text"]
 
     def __loadSpeech(self, audio_path: Union[str, Path]) -> str:
         with open(audio_path, "rb") as f:
@@ -53,7 +55,7 @@ class SpeechToViet:
 
 def main():
     speechToViet = SpeechToViet()
-    print(speechToViet()) # turn on to test
+    print(speechToViet())  # turn on to test
 
 
 if __name__ == "__main__":

@@ -1,8 +1,10 @@
-import pygame
 import os
 import random
 from pathlib import Path
-pygame.init()   
+
+import pygame
+
+pygame.init()
 
 # Global Constants
 SCREEN_HEIGHT = 600
@@ -16,20 +18,28 @@ CACTUSPATH = ASSETSPATH.joinpath(*["Cactus"])
 DINOPATH = ASSETSPATH.joinpath(*["Dino"])
 BGPATH = ASSETSPATH.joinpath(*["Other"])
 
-RUNNING = [pygame.image.load(DINOPATH.joinpath(*["DinoRun1.png"])),
-           pygame.image.load(DINOPATH.joinpath(*["DinoRun2.png"]))]
+RUNNING = [
+    pygame.image.load(DINOPATH.joinpath(*["DinoRun1.png"])),
+    pygame.image.load(DINOPATH.joinpath(*["DinoRun2.png"])),
+]
 JUMPING = pygame.image.load(DINOPATH.joinpath(*["DinoJump.png"]))
 
-DUCKING = [pygame.image.load(DINOPATH.joinpath(*["DinoDuck1.png"])),
-           pygame.image.load(DINOPATH.joinpath(*["DinoDuck2.png"]))]
+DUCKING = [
+    pygame.image.load(DINOPATH.joinpath(*["DinoDuck1.png"])),
+    pygame.image.load(DINOPATH.joinpath(*["DinoDuck2.png"])),
+]
 
-SMALL_CACTUS = [pygame.image.load(CACTUSPATH.joinpath(*["SmallCactus1.png"])),
-                pygame.image.load(CACTUSPATH.joinpath(*["SmallCactus2.png"])),
-                pygame.image.load(CACTUSPATH.joinpath(*["SmallCactus3.png"]))]
+SMALL_CACTUS = [
+    pygame.image.load(CACTUSPATH.joinpath(*["SmallCactus1.png"])),
+    pygame.image.load(CACTUSPATH.joinpath(*["SmallCactus2.png"])),
+    pygame.image.load(CACTUSPATH.joinpath(*["SmallCactus3.png"])),
+]
 
-LARGE_CACTUS = [pygame.image.load(CACTUSPATH.joinpath(*["LargeCactus1.png"])),
-                pygame.image.load(CACTUSPATH.joinpath(*["LargeCactus2.png"])),
-                pygame.image.load(CACTUSPATH.joinpath(*["LargeCactus3.png"]))]
+LARGE_CACTUS = [
+    pygame.image.load(CACTUSPATH.joinpath(*["LargeCactus1.png"])),
+    pygame.image.load(CACTUSPATH.joinpath(*["LargeCactus2.png"])),
+    pygame.image.load(CACTUSPATH.joinpath(*["LargeCactus3.png"])),
+]
 
 BIRD = [pygame.image.load(i) for i in BIRDPATH.iterdir()]
 
@@ -103,7 +113,7 @@ class Dinosaur:
         if self.dino_jump:
             self.dino_rect.y -= self.jump_vel * 4
             self.jump_vel -= 0.8
-        if self.jump_vel < - self.JUMP_VEL:
+        if self.jump_vel < -self.JUMP_VEL:
             self.dino_jump = False
             self.jump_vel = self.JUMP_VEL
 
@@ -168,7 +178,7 @@ class Bird(Obstacle):
     def draw(self, SCREEN):
         if self.index >= 9:
             self.index = 0
-        SCREEN.blit(self.image[self.index//5], self.rect)
+        SCREEN.blit(self.image[self.index // 5], self.rect)
         self.index += 1
 
 
@@ -182,7 +192,7 @@ def main():
     x_pos_bg = 0
     y_pos_bg = 380
     points = 0
-    font = pygame.font.Font('freesansbold.ttf', 20)
+    font = pygame.font.Font("freesansbold.ttf", 20)
     obstacles = []
     death_count = 0
 
@@ -251,7 +261,7 @@ def menu(death_count):
     run = True
     while run:
         SCREEN.fill((255, 255, 255))
-        font = pygame.font.Font('freesansbold.ttf', 30)
+        font = pygame.font.Font("freesansbold.ttf", 30)
 
         if death_count == 0:
             text = font.render("Press any Key to Start", True, (0, 0, 0))
@@ -264,7 +274,9 @@ def menu(death_count):
         textRect = text.get_rect()
         textRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
         SCREEN.blit(text, textRect)
-        SCREEN.blit(RUNNING[0], (SCREEN_WIDTH // 2 - 20, SCREEN_HEIGHT // 2 - 140))
+        SCREEN.blit(
+            RUNNING[0], (SCREEN_WIDTH // 2 - 20, SCREEN_HEIGHT // 2 - 140)
+        )
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
