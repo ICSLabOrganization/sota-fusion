@@ -8,27 +8,34 @@ pygame.init()
 SCREEN_HEIGHT = 600
 SCREEN_WIDTH = 1100
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-a = os.path.join(Path(__file__).parent,os.listdir(Path(__file__).parent)[2])
-b = os.listdir(a)
-c = [os.path.join(a,i) for i in b]
+c = [i for i in Path.iterdir(Path(__file__).parent)]
+d = [i for i in Path.iterdir(c[1])]
 
-RUNNING = [pygame.image.load(os.path.join(c[2], "DinoRun1.png")),
-           pygame.image.load(os.path.join(c[2], "DinoRun2.png"))]
-JUMPING = pygame.image.load(os.path.join(c[2], "DinoJump.png"))
-DUCKING = [pygame.image.load(os.path.join(c[2], "DinoDuck1.png")),
-           pygame.image.load(os.path.join(c[2], "DinoDuck2.png"))]
-SMALL_CACTUS = [pygame.image.load(os.path.join(c[0], "SmallCactus1.png")),
-                pygame.image.load(os.path.join(c[0], "SmallCactus2.png")),
-                pygame.image.load(os.path.join(c[0], "SmallCactus3.png"))]
-LARGE_CACTUS = [pygame.image.load(os.path.join(c[0], "LargeCactus1.png")),
-                pygame.image.load(os.path.join(c[0], "LargeCactus2.png")),
-                pygame.image.load(os.path.join(c[0], "LargeCactus3.png"))]
+dino = [i for i in Path.iterdir(d[2])]
+cactus = [i for i in Path.iterdir(d[1])]
+bird = [i for i in Path.iterdir(d[0])]
+bg = [i for i in Path.iterdir(d[3])]
 
-BIRD = [pygame.image.load(os.path.join(c[-1], "Bird1.png")),
-        pygame.image.load(os.path.join(c[-1], "Bird2.png"))]
+RUNNING = [pygame.image.load(dino[4]),
+           pygame.image.load(dino[5])]
 
-CLOUD = pygame.image.load(os.path.join(c[1], "Cloud.png"))
-BG = pygame.image.load(os.path.join(c[1], "Track.png"))
+JUMPING = pygame.image.load(dino[3])
+
+DUCKING = [pygame.image.load(dino[1]),
+            pygame.image.load(dino[2])]
+
+SMALL_CACTUS = [pygame.image.load(cactus[3]),
+                pygame.image.load(cactus[4]),
+                pygame.image.load(cactus[5])]
+LARGE_CACTUS = [pygame.image.load(cactus[0]),
+                pygame.image.load(cactus[1]),
+                pygame.image.load(cactus[2])]
+
+BIRD = [pygame.image.load(i) for i in bird]
+
+CLOUD = pygame.image.load(bg[0])
+
+BG = pygame.image.load(bg[-1])
 
 
 class Dinosaur:
