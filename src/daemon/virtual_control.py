@@ -181,7 +181,7 @@ class VirtualControl(HandGesture_recognition):
             
             # screen showing #############################################################
             cv.namedWindow(window_name)
-            cv.moveWindow(window_name, 100, 100)
+            cv.moveWindow(window_name, 0, 0)
             cv.imshow(window_name, debug_image)
             
         if self.cap:

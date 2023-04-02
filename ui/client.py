@@ -50,6 +50,9 @@ class Process_mainTask(Process):
         
     def run(self):
         root = Tk()
+        #send window to front of all windows
+        root.attributes("-topmost", True)        
+        
         mainWindow = Client(root)
         root.protocol('WM_DELETE_WINDOW', mainWindow.on_exit)
         root.mainloop()
