@@ -41,7 +41,7 @@ class Speech2Image_window:
         self.window.geometry("862x519")
         self.window.configure(bg="#0F1A2C")
 
-        # image button deactive and active
+        # image button deactivate and active
         self.img_btnGenerate = PhotoImage(
             file=self._relative_to_assets("btn_generate.png")
         )
@@ -49,7 +49,7 @@ class Speech2Image_window:
             file=self._relative_to_assets("btn_generate_enabled.png")
         )
         self.img_btnGenerate_loading = PhotoImage(
-            file=self._relative_to_assets("btn_generate_loadingbg.png")
+            file=self._relative_to_assets("btn_generate_loadingBg.png")
         )
 
         self.img_btnDelete = PhotoImage(
@@ -88,9 +88,7 @@ class Speech2Image_window:
 
         self.entry_image = PhotoImage(
             file=self._relative_to_assets("speech2image", "entry.png"))
-        # self.img_result = PhotoImage(
-        #     file="/home/tiendat/Workspace/Building_app/sota-fusion/src/speech2image/assets/output-images/output1.png"
-        # )
+        
         # frames of loading gif
         _frame_count = 8  # magic number
         self.loading_frames = [
@@ -137,15 +135,6 @@ class Speech2Image_window:
             332.0, 215.0, image=self.img_btnDelete
         )
 
-        # self.textResult_canvas = self.canvas.create_text(
-        #     47.0,
-        #     94.0,
-        #     anchor="nw",
-        #     text="A girl jumping",
-        #     fill="#000000",
-        #     font=("Caladea", 15 * -1),
-        # )
-
         #text entry
         self.entry_bg = self.canvas.create_image(
             208.0,
@@ -154,7 +143,7 @@ class Speech2Image_window:
         )
 
         self.entry = Entry(
-            self.canvas,
+            self.window,
             bd=0,
             bg="#2d2d2d",
             # fg="#000716",
@@ -301,7 +290,7 @@ class Speech2Image_window:
             )
 
         else:
-            # unhidden loadding animation
+            # unhidden loading animation
             self.canvas.itemconfig(
                 self.loadingAnimation_canvas, state="normal"
             )
@@ -313,7 +302,7 @@ class Speech2Image_window:
     def exit_loading_status(self):
         self.loading_state = False
 
-        # hidden loadding animation
+        # hidden loading animation
         self.canvas.itemconfig(self.loadingAnimation_canvas, state="hidden")
 
         # restore status for generate button

@@ -10,24 +10,23 @@ Copyright (c) 2023 ICSLab
 """
 from __future__ import absolute_import, division, print_function
 
-import queue
 import sys
-import threading
-import time
-from pathlib import Path
-from threading import Thread
+import queue
 import tkinter
+import threading
+from pathlib import Path
+from multiprocessing import Process
+from threading import Thread
 from tkinter import Image, Tk
-
 from loguru import logger  # type: ignore
-from PIL import ImageTk, Image
+from PIL import ImageTk, Image #type: ignore
 
 sys.path.append(str(Path(__file__).parent.parent))  # root directory
+
 from mainWindow import MainWindow # noqa: E402
 from speech2image import Speech2Image_window  # noqa: E402
 from style_transfer import StyleTransfer_window  # noqa: E402
-
-from src import EngToImage, SpeechToViet, VietToEng, recording  # noqa: E402
+from src import EngToImage, SpeechToViet, VietToEng, recording, VirtualControl  # noqa: E402
 
 # create lock for prevent race condition
 lock = threading.Lock()
@@ -36,15 +35,27 @@ lock = threading.Lock()
 result_queue = queue.Queue()
 
 
-class AsyncTask_test(Thread):
+class Process_virtualControlTask(Process):
     def __init__(self):
         super().__init__()
+        self.virtualControl = VirtualControl()
 
     def run(self):
-        time.sleep(10)
+        self.virtualControl.run()
 
 
-class AsyncRequest_text2image(Thread):
+class Process_mainTask(Process):
+    def __init__(self):
+        super().__init__()
+        
+    def run(self):
+        root = Tk()
+        mainWindow = Client(root)
+        root.protocol('WM_DELETE_WINDOW', mainWindow.on_exit)
+        root.mainloop()
+
+
+class Thread_text2image(Thread):
     def __init__(self, input_text):
         super().__init__()
 
@@ -59,7 +70,7 @@ class AsyncRequest_text2image(Thread):
             result_queue.put(result_img)
 
 
-class AsyncRequest_recording(Thread):
+class Thread_recording(Thread):
     def __init__(self):
         super().__init__()
 
@@ -71,7 +82,7 @@ class AsyncRequest_recording(Thread):
             result_queue.put(resultRecord_path)
 
 
-class AsyncRequest_speech2text(Thread):
+class Thread_speech2text(Thread):
     def __init__(self, resultRecord_path):
         super().__init__()
 
@@ -93,7 +104,7 @@ class AsyncRequest_speech2text(Thread):
 class Client(MainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
+        
         self.binding_button_click()
 
     def binding_button_click(self):
@@ -126,6 +137,9 @@ class Client(MainWindow):
 
         elif ID == 3:  # speech2image button
             self.sub_window = Speech2Image_extend(self.window)
+
+    def on_exit(self):
+        self.window.destroy()
 
 
 class StyleTransfer_extend(StyleTransfer_window):
@@ -173,7 +187,7 @@ class StyleTransfer_extend(StyleTransfer_window):
             self.canvas.itemconfig(
                 self.buttonGenerate_canvas, image=self.img_btnGenerate_loading
             )
-            # unhidden loadding animation
+            # unhidden loading animation
             self.canvas.itemconfig(
                 self.loadingAnimation_canvas, state="normal"
             )
@@ -227,7 +241,7 @@ class Speech2Image_extend(Speech2Image_window):
                 # create thread for generate image (long-term task) and for getting value from queue
                 en_inputText = self.entry.get()
 
-                generateImg_thread = AsyncRequest_text2image(
+                generateImg_thread = Thread_text2image(
                     input_text=en_inputText
                 )
                 # generateImg_thread = AsyncTask_test()
@@ -243,7 +257,7 @@ class Speech2Image_extend(Speech2Image_window):
             if self.loading_state is False:
                 self.enter_loading_status(mode="recording")
 
-                recoding_thread = AsyncRequest_recording()
+                recoding_thread = Thread_recording()
                 recoding_thread.start()
 
                 self.monitor_recording(recoding_thread)
@@ -295,7 +309,7 @@ class Speech2Image_extend(Speech2Image_window):
                 logger.info("Path not found")
 
             else:
-                # update status recroding for GUI
+                # update status recording for GUI
                 self.canvas.itemconfig(
                     self.btn_record_canvas, image=self.img_btnRecord_enabled
                 )
@@ -303,7 +317,7 @@ class Speech2Image_extend(Speech2Image_window):
                 self.enter_loading_status()  # for loading animation
 
                 # start speech2text thread
-                speech2text_thread = AsyncRequest_speech2text(
+                speech2text_thread = Thread_speech2text(
                     resultRecord_path=resultRecord_path
                 )
                 speech2text_thread.start()
@@ -334,6 +348,13 @@ class Speech2Image_extend(Speech2Image_window):
 
 
 if __name__ == "__main__":
-    root = Tk()
-    mainWindow = Client(root)
-    root.mainloop()
+    process_virtualControlTask = Process_virtualControlTask()
+    process_mainTask = Process_mainTask()
+    
+    #start two processes
+    process_virtualControlTask.start()
+    process_mainTask.start()
+    
+    #wait for process to finish
+    process_virtualControlTask.join()
+    process_mainTask.join()

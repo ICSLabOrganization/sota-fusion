@@ -13,9 +13,6 @@ from __future__ import absolute_import, division, print_function
 from pathlib import Path
 from tkinter import Canvas, PhotoImage, Tk
 
-from speech2image import Speech2Image_window
-from style_transfer import StyleTransfer_window
-
 
 class MainWindow:
     def __init__(self, master: Tk):

@@ -10,18 +10,25 @@ Copyright (c) 2023 Your Company
 '''
 from __future__ import division, absolute_import
 
+import sys
 import copy
-import cv2 as cv
-import pyautogui
+import cv2 as cv #type: ignore
+import pyautogui #type: ignore
+from pathlib import Path
 from typing import List, Deque
 from loguru import logger  # type: ignore 
 
+
+sys.path.append(str(Path(__file__).parent))  # daemon folder
 from handGesture_recognition import HandGesture_recognition
 
 
-class VirtualControlTask(HandGesture_recognition):
+class VirtualControl(HandGesture_recognition):
     def __init__(self):
         super().__init__()
+        self.using_mouse = True
+        self.using_keyboard = False
+        self.stop_thread = False
     
 
     def is_HiFive_gesture(self, hand_landmarks: List):
@@ -50,8 +57,9 @@ class VirtualControlTask(HandGesture_recognition):
     def is_click_action(self, hand_landmarks: List) -> bool:
 
         def checking_validDeque(sequence_deque: Deque) -> bool:
-            if sequence_deque[-1] == [0, 0] and not sequence_deque[-2] == [0, 0]:
-                return True
+            if len(sequence_deque) > 2:  #for prevent out of index
+                if sequence_deque[-1] == [0, 0] and not sequence_deque[-2] == [0, 0]:
+                    return True
             
             return False
 
@@ -102,9 +110,9 @@ class VirtualControlTask(HandGesture_recognition):
         
     def run(self):
         #setup camera ###############################################################
-        cap = cv.VideoCapture(self.device)
-        cap.set(cv.CAP_PROP_FRAME_WIDTH, self.width)
-        cap.set(cv.CAP_PROP_FRAME_HEIGHT, self.height)
+        self.cap = cv.VideoCapture(self.device)
+        self.cap.set(cv.CAP_PROP_FRAME_WIDTH, self.width)
+        self.cap.set(cv.CAP_PROP_FRAME_HEIGHT, self.height)
         
         #params #######################################################################
         mode = 0
@@ -115,11 +123,11 @@ class VirtualControlTask(HandGesture_recognition):
         screenWidth, screenHeight = pyautogui.size()
         is_hiFiveGesture_happened = False
         previous_hiFiveGesture_status = False
-        
         width_ratio = float(screenWidth / self.width)
         height_ratio = float(screenHeight / self.height)
+        window_name = 'Hand Gesture Recognition'
 
-        while True:
+        while not self.stop_thread:
             fps = self.cvFpsCalc.get()
 
             key = cv.waitKey(1) if not self.use_static_image_mode \
@@ -130,7 +138,7 @@ class VirtualControlTask(HandGesture_recognition):
             number, mode, auto, prev_number = self._select_mode(key, mode, auto, prev_number)
 
             # camera capture #####################################################
-            ret, image = cap.read()
+            ret, image = self.cap.read()
             if not ret:
                 break
 
@@ -149,29 +157,42 @@ class VirtualControlTask(HandGesture_recognition):
             debug_image = self._draw_point_history(debug_image, self.point_history)
             debug_image = self._draw_info(debug_image, fps, mode, number, auto)
 
-            #clicking mouse
             if hand_landmarks is not None and len(hand_landmarks) > 0:
                 previous_hiFiveGesture_status = is_hiFiveGesture_happened
                 is_hiFiveGesture_happened = self.is_HiFive_gesture(hand_landmarks=hand_landmarks)
-                
-                if len(self.point_history) > 0: #keypoint gesture
-                    if not is_hiFiveGesture_happened:
-                        self.moving_mouse(width_ratio=width_ratio, height_ratio=height_ratio)
 
-                    if not previous_hiFiveGesture_status and is_hiFiveGesture_happened:
-                        logger.info("Virtual clicking...")
-                        self.clicking_mouse(width_ratio=width_ratio,
-                                            height_ratio=height_ratio,
-                                            hand_landmarks=hand_landmarks) 
+                #control mouse
+                if self.using_mouse:
+                    if len(self.point_history) > 0: #key-point gesture
+                        if not is_hiFiveGesture_happened: #prevent mouse move when use hiFiveGesture 
+                            self.moving_mouse(width_ratio=width_ratio, height_ratio=height_ratio)
+
+                        if not previous_hiFiveGesture_status and is_hiFiveGesture_happened: #prevent duplicate click
+                            logger.info("Virtual clicking...")
+                            self.clicking_mouse(width_ratio=width_ratio,
+                                                height_ratio=height_ratio,
+                                                hand_landmarks=hand_landmarks) 
+            
+                #control keyboard
+                if self.using_keyboard:
+                    if is_hiFiveGesture_happened:
+                        pyautogui.press('backspace')
+                        logger.debug("Virtual backspace")
             
             # screen showing #############################################################
-            cv.imshow('Hand Gesture Recognition', debug_image)
-
-        if cap:
-            cap.release()
+            cv.namedWindow(window_name)
+            cv.moveWindow(window_name, 100, 100)
+            cv.imshow(window_name, debug_image)
+            
+        if self.cap:
+            self.cap.release()
         cv.destroyAllWindows()
 
+    def on_exit(self):
+        self.stop_thread = True
+        self.cap.release()
+        cv.destroyAllWindows()
 
 if __name__ == '__main__':
-    virtualControlTask = VirtualControlTask()
-    virtualControlTask.run() 
+    virtualControl = VirtualControl()
+    virtualControl.run() 
