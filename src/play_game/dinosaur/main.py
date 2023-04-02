@@ -212,6 +212,7 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
 
+
         SCREEN.fill((255, 255, 255))
         userInput = pygame.key.get_pressed()
 
@@ -243,6 +244,7 @@ def main():
 
         clock.tick(30)
         pygame.display.update()
+        pygame.quit()
 
 
 def menu(death_count):
