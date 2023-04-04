@@ -14,7 +14,6 @@ import queue
 import sys
 import threading
 import tkinter
-from multiprocessing import Process
 from pathlib import Path
 from threading import Thread
 from tkinter import Image, Tk
@@ -32,7 +31,6 @@ from src import (  # noqa: E402
     EngToImage,
     SpeechToViet,
     VietToEng,
-    VirtualControl,
     recording,
 )
 
@@ -41,29 +39,6 @@ lock = threading.Lock()
 
 # create a long-term running task queue for output
 result_queue = queue.Queue()
-
-
-class Process_virtualControlTask(Process):
-    def __init__(self):
-        super().__init__()
-        self.virtualControl = VirtualControl()
-
-    def run(self):
-        self.virtualControl.run()
-
-
-class Process_mainTask(Process):
-    def __init__(self):
-        super().__init__()
-
-    def run(self):
-        root = Tk()
-        # send window to front of all windows
-        root.attributes("-topmost", True)
-
-        mainWindow = Client(root)
-        root.protocol("WM_DELETE_WINDOW", mainWindow.on_exit)
-        root.mainloop()
 
 
 class Thread_text2image(Thread):
@@ -313,9 +288,6 @@ class Speech2Image_extend(Speech2Image_window):
             logger.info("Thread done!!")
             resultRecord_path = result_queue.get()
 
-            # exit updating status for GUI
-            # self.exit_loading_status()
-
             if resultRecord_path is None:
                 logger.info("Path not found")
 
@@ -359,13 +331,10 @@ class Speech2Image_extend(Speech2Image_window):
 
 
 if __name__ == "__main__":
-    process_virtualControlTask = Process_virtualControlTask()
-    process_mainTask = Process_mainTask()
+    root = Tk()
+    # send window to front of all windows
+    root.attributes("-topmost", True)
 
-    # start two processes
-    process_virtualControlTask.start()
-    process_mainTask.start()
-
-    # wait for process to finish
-    process_virtualControlTask.join()
-    process_mainTask.join()
+    mainWindow = Client(root)
+    root.protocol("WM_DELETE_WINDOW", mainWindow.on_exit)
+    root.mainloop()

@@ -35,7 +35,7 @@ class VietToEng:
         vi_inputText = vi_inputText.encode("utf-8")
         output = self._translate_vi2en(vi_inputText=vi_inputText)
 
-        output = output[0]["generated_text"]
+        output = output[0]['generated_text']
 
         return output
 

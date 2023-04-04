@@ -44,7 +44,7 @@ class SpeechToViet:
         # load model and tokenizer
         output = self.__loadSpeech(audio_path=audio_path)
 
-        return output["text"]
+        return output['text'] # type: ignore
 
     def __loadSpeech(self, audio_path: Union[str, Path]) -> str:
         with open(audio_path, "rb") as f:

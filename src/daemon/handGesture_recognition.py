@@ -9,7 +9,6 @@ Author: tiendat
 Copyright (c) 2023 ICSLab
 """
 from __future__ import absolute_import, division
-
 import copy
 import itertools
 import sys
@@ -250,8 +249,6 @@ class HandGesture_recognition:
         debug_image,
         palm_trackid_box_x1y1s,
         not_rotate_rects,
-        # number,
-        # mode
     ):
 
         trackid, pre_processed_landmark, hand_landmarks = (
@@ -259,7 +256,7 @@ class HandGesture_recognition:
             None,
             None,
         )  # for prevent unbounded
-
+        
         if len(cropted_rotated_hands_images) > 0:
 
             # Inference HandLandmark - バッチ処理
