@@ -1,7 +1,7 @@
 import os
 import random
 from pathlib import Path
-
+import sys
 import pygame
 
 pygame.init()
@@ -220,7 +220,9 @@ def main():
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                pygame.quit() # quit the screen
                 run = False
+                sys.exit()
 
         SCREEN.fill((255, 255, 255))
         userInput = pygame.key.get_pressed()
@@ -280,7 +282,9 @@ def menu(death_count):
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                pygame.quit() # quit the screen
                 run = False
+                sys.exit()
             if event.type == pygame.KEYDOWN:
                 main()
     pygame.quit()
