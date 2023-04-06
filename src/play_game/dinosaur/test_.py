@@ -194,7 +194,7 @@ class Play():
         self.font = pygame.font.Font("freesansbold.ttf", 20)
         obstacles = []
         self.death_count = 0
-        self.run = True
+        self.run = True 
     def __config(self):
         def _score():
             global points, game_speed
