@@ -195,27 +195,6 @@ class Play():
         obstacles = []
         self.death_count = 0
         self.run = True
-
-    # def _score(self):
-    #     global points, game_speed
-    #     points += 1
-    #     if points % 100 == 0:
-    #         game_speed += 1
-        
-    #     text = self.font.render("Points " + str(points), True, (0, 0, 0))
-    #     textRect = text.get_rect()
-    #     textRect.center = (1000, 40)
-    #     SCREEN.blit(text, textRect)
-    
-    # def _background(self):
-    #     global x_pos_bg, y_pos_bg
-    #     image_width = BG.get_width()
-    #     SCREEN.blit(BG, (x_pos_bg, y_pos_bg))
-    #     SCREEN.blit(BG, (image_width + x_pos_bg, y_pos_bg))
-    #     if x_pos_bg <= -image_width:
-    #         SCREEN.blit(BG, (image_width + x_pos_bg, y_pos_bg))
-    #         x_pos_bg = 0
-    #     x_pos_bg -= game_speed
     def __config(self):
         def _score():
             global points, game_speed
