@@ -12,13 +12,13 @@ from __future__ import absolute_import, division, print_function
 
 import queue
 import sys
-import torch
 import threading
 import tkinter
 from pathlib import Path
 from threading import Thread
 from tkinter import Image, Tk
 
+import torch
 from loguru import logger  # type: ignore
 from PIL import Image, ImageTk  # noqa: F811
 
@@ -30,10 +30,10 @@ from style_transfer import StyleTransfer_window  # noqa: E402
 
 from src import (  # noqa: E402
     EngToImage,
+    NeuralStyle,
     SpeechToViet,
     VietToEng,
     recording,
-    NeuralStyle
 )
 
 # create lock for prevent race condition
@@ -97,23 +97,25 @@ class Thread_styleTransfer(Thread):
 
         self.content_path = content_path
         self.style_modelName = style_modelName
-    
+
     def run(self):
         neuralStyle = NeuralStyle()
 
         use_cuda = False
-        if torch.cuda.is_available() :
+        if torch.cuda.is_available():
             use_cuda = True
 
-        result_img = neuralStyle(args_content_image=self.content_path, 
-                                 args_model=self.style_modelName, 
-                                 args_cuda=use_cuda)
-    
+        result_img = neuralStyle(
+            args_content_image=self.content_path,
+            args_model=self.style_modelName,
+            args_cuda=use_cuda,
+        )
+
         # put to queue
         with lock:
             result_queue.put(result_img)
 
-    
+
 class Client(MainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -191,50 +193,52 @@ class StyleTransfer_extend(StyleTransfer_window):
     def get_click_event(self, ID: int, event=None):
         logger.debug("ID of click event: " + str(ID))
 
-        if ID == 0: #back button
+        if ID == 0:  # back button
             self.window.destroy()
             # restore the main window
             self.master.deiconify()
 
-        elif ID == 1: #generate button
+        elif ID == 1:  # generate button
             if self.loading_state is False:
                 self.enter_loading_status()
-                
-                #get path of input images
+
+                # get path of input images
                 self.current_contentPath = self.content_paths[self.content_idx]
                 self.current_styleName = self.style_paths[self.style_idx].stem
 
                 # create thread for generate image (long-term task) and for getting value from queue
-                generateImg_thread = Thread_styleTransfer(content_path=self.current_contentPath, 
-                                                          style_modelName=str(self.current_styleName))
+                generateImg_thread = Thread_styleTransfer(
+                    content_path=self.current_contentPath,
+                    style_modelName=str(self.current_styleName),
+                )
                 generateImg_thread.start()
 
                 self.monitor_gettingImage(generateImg_thread)
-            
-        elif ID == 2: #change content image button
-            #update PIL image
+
+        elif ID == 2:  # change content image button
+            # update PIL image
             self.content_idx += 1
             if self.content_idx == len(self.content_paths):
                 self.content_idx = 0
-            
-            #resize image                
+
+            # resize image
             self.img_content_PIL = self.resize_PIL_image(PIL_image=Image.open(self.content_paths[self.content_idx]))  # type: ignore
 
-            #update image
+            # update image
             self.get_moveOver_event(ID=2, event="Enter")
-            
-        elif ID == 3: #change style image button
-            #update new image
-            self.style_idx+= 1
+
+        elif ID == 3:  # change style image button
+            # update new image
+            self.style_idx += 1
             if self.style_idx == len(self.style_paths):
                 self.style_idx = 0
-                
-            #resize image                
+
+            # resize image
             self.img_style_PIL = self.resize_PIL_image(PIL_image=Image.open(self.style_paths[self.style_idx]))  # type: ignore
-            
-            #update image
+
+            # update image
             self.get_moveOver_event(ID=3, event="Enter")
-    
+
     def monitor_gettingImage(self, thread: Thread):
         if thread.is_alive():
             # check the thread every 100ms
@@ -263,6 +267,7 @@ class StyleTransfer_extend(StyleTransfer_window):
                 )
 
                 logger.debug("Image updated")
+
 
 class Speech2Image_extend(Speech2Image_window):
     def __init__(self, *args, **kwargs):

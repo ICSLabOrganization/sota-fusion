@@ -1,7 +1,8 @@
 import os
 import random
-from pathlib import Path
 import sys
+from pathlib import Path
+
 import pygame
 
 pygame.init()
@@ -220,7 +221,7 @@ def main():
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit() # quit the screen
+                pygame.quit()  # quit the screen
                 run = False
                 sys.exit()
 
@@ -282,11 +283,12 @@ def menu(death_count):
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit() # quit the screen
+                pygame.quit()  # quit the screen
                 run = False
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 main()
     pygame.quit()
+
 
 menu(death_count=0)

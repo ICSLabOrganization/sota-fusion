@@ -24,7 +24,7 @@ class Speech2Image_window:
         self.window.protocol("WM_DELETE_WINDOW", self.__on_closing)
 
         # replace current window with new window
-        OUTPUT_PATH = Path(__file__).parent # type: ignore
+        OUTPUT_PATH = Path(__file__).parent  # type: ignore
         self.ASSETS_PATH = OUTPUT_PATH.joinpath("assets")
 
         self.__static_ui()

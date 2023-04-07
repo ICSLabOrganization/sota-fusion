@@ -1,7 +1,8 @@
 import os
 import random
-from pathlib import Path
 import sys
+from pathlib import Path
+
 import pygame
 
 pygame.init()
@@ -119,6 +120,8 @@ class Dinosaur:
 
     def draw(self, SCREEN):
         SCREEN.blit(self.image, (self.dino_rect.x, self.dino_rect.y))
+
+
 class Cloud:
     def __init__(self):
         self.x = SCREEN_WIDTH + random.randint(800, 1000)
@@ -179,7 +182,8 @@ class Bird(Obstacle):
         SCREEN.blit(self.image[self.index // 5], self.rect)
         self.index += 1
 
-class Play():
+
+class Play:
     def __init__(self):
         global game_speed, x_pos_bg, y_pos_bg, points, obstacles
         self.clock = pygame.time.Clock()
@@ -192,18 +196,20 @@ class Play():
         self.font = pygame.font.Font("freesansbold.ttf", 20)
         obstacles = []
         self.death_count = 0
-        self.run = True 
+        self.run = True
+
     def __config(self):
         def _score():
             global points, game_speed
             points += 1
             if points % 100 == 0:
                 game_speed += 1
-            
+
             text = self.font.render("Points " + str(points), True, (0, 0, 0))
             textRect = text.get_rect()
             textRect.center = (1000, 40)
             SCREEN.blit(text, textRect)
+
         def _background():
             global x_pos_bg, y_pos_bg
             image_width = BG.get_width()
@@ -213,12 +219,19 @@ class Play():
                 SCREEN.blit(BG, (image_width + x_pos_bg, y_pos_bg))
                 x_pos_bg = 0
             x_pos_bg -= game_speed
+
         while self.run:
             if self.death_count == 0:
-                text = self.font.render("Press Space to Start", True, (0, 0, 0))
+                text = self.font.render(
+                    "Press Space to Start", True, (0, 0, 0)
+                )
             elif self.death_count > 0:
-                text = self.font.render("Press Space to Restart", True, (0, 0, 0))
-                score = self.font.render("Score: " + str(points), True, (0, 0, 0))
+                text = self.font.render(
+                    "Press Space to Restart", True, (0, 0, 0)
+                )
+                score = self.font.render(
+                    "Score: " + str(points), True, (0, 0, 0)
+                )
                 scoreRect = score.get_rect()
                 scoreRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)
                 SCREEN.blit(score, scoreRect)
@@ -226,7 +239,7 @@ class Play():
             textRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
             SCREEN.blit(text, textRect)
             SCREEN.blit(
-            RUNNING[0], (SCREEN_WIDTH // 2 - 20, SCREEN_HEIGHT // 2 - 140)
+                RUNNING[0], (SCREEN_WIDTH // 2 - 20, SCREEN_HEIGHT // 2 - 140)
             )
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -245,7 +258,7 @@ class Play():
                     obstacles.append(LargeCactus(LARGE_CACTUS))
                 elif random.randint(0, 2) == 2:
                     obstacles.append(Bird(BIRD))
-            
+
             for obstacle in obstacles:
                 obstacle.draw(SCREEN)
                 obstacle.update()
@@ -260,7 +273,8 @@ class Play():
             self.clock.tick(40)
             pygame.display.update()
         pygame.quit()
-    def play(self, death_count = 0):
+
+    def play(self, death_count=0):
         global points
         self.run = True
         while self.run:
@@ -271,7 +285,9 @@ class Play():
                 text = font.render("Press any Key to Start", True, (0, 0, 0))
             elif death_count > 0:
                 text = font.render("Press any Key to Restart", True, (0, 0, 0))
-                score = font.render("Your Score: " + str(points), True, (0, 0, 0))
+                score = font.render(
+                    "Your Score: " + str(points), True, (0, 0, 0)
+                )
                 scoreRect = score.get_rect()
                 scoreRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)
                 SCREEN.blit(score, scoreRect)
@@ -290,6 +306,7 @@ class Play():
                 if event.type == pygame.KEYDOWN:
                     self.__config()
         pygame.quit()
+
 
 play = Play()
 play.play()

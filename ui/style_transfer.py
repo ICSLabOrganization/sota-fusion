@@ -13,10 +13,12 @@ from __future__ import absolute_import, division, print_function
 import sys
 from pathlib import Path
 from tkinter import Canvas, PhotoImage, Tk, Toplevel
+
 from PIL import Image, ImageEnhance, ImageTk
 
 sys.path.append(str(Path(__file__).parents[1]))  # root folder
 from src._config import load_config  # noqa: E402
+
 
 class StyleTransfer_window:
     def __init__(self, master):
@@ -31,23 +33,27 @@ class StyleTransfer_window:
         self.ASSETS_PATH = OUTPUT_PATH.joinpath("assets")
 
         # content, style and result image
-        self.CONTENT_IMAGES = self.ASSETS_PATH.joinpath(*["style-transfer", "contents"]) 
-        self.STYLE_IMAGES = self.ASSETS_PATH.joinpath(*["style-transfer", "styles"]) 
+        self.CONTENT_IMAGES = self.ASSETS_PATH.joinpath(
+            *["style-transfer", "contents"]
+        )
+        self.STYLE_IMAGES = self.ASSETS_PATH.joinpath(
+            *["style-transfer", "styles"]
+        )
 
-        #update contents and styles
+        # update contents and styles
         self.content_paths = sorted(Path.iterdir(self.CONTENT_IMAGES))
         self.style_paths = sorted(Path.iterdir(self.STYLE_IMAGES))
 
-        #load size of images
+        # load size of images
         config = load_config(mode="style-transfer")
         self.w_inputSize, self.h_inputSize = config["input_size"]
         self.w_resultSize, self.h_resultSize = config["result_size"]
-        
-        #initialize
+
+        # initialize
         self.content_idx, self.style_idx = 0, 0
-        self.img_content_PIL = self.resize_PIL_image(PIL_image=Image.open(self.content_paths[self.content_idx])) # type: ignore
-        self.img_style_PIL = self.resize_PIL_image(PIL_image=Image.open(self.style_paths[self.style_idx])) # type: ignore
-        
+        self.img_content_PIL = self.resize_PIL_image(PIL_image=Image.open(self.content_paths[self.content_idx]))  # type: ignore
+        self.img_style_PIL = self.resize_PIL_image(PIL_image=Image.open(self.style_paths[self.style_idx]))  # type: ignore
+
         # setup for loading state
         self.loading_state = False
 
@@ -56,12 +62,12 @@ class StyleTransfer_window:
 
     def __on_closing(self):
         self.master.destroy()
-    
+
     def resize_PIL_image(self, PIL_image: Image, is_input: bool = True):
         if is_input:
             return PIL_image.resize((self.w_inputSize, self.h_inputSize), Image.Resampling.LANCZOS)  # type: ignore
 
-        else:        
+        else:
             return PIL_image.resize((self.w_resultSize, self.h_resultSize), Image.Resampling.LANCZOS)  # type: ignore
 
     def __static_ui(self):
@@ -165,7 +171,7 @@ class StyleTransfer_window:
         self.canvas.itemconfig(self.text_contentImg_canvas, state="hidden")
         self.canvas.itemconfig(self.text_styleImg_canvas, state="hidden")
         self.canvas.itemconfig(self.loadingAnimation_canvas, state="hidden")
-    
+
     def _binding_button_moveOver(self):
         # binding event for button
         self.canvas.tag_bind(
@@ -258,22 +264,22 @@ class StyleTransfer_window:
                         self.buttonGenerate_canvas, image=self.img_btnGenerate
                     )
 
-        elif ID == 2: #change content image button
+        elif ID == 2:  # change content image button
             self.new_content_image = self._get_movingOver_image(
                 image_PIL=self.img_content_PIL,  # type: ignore
                 text_canvasItem=self.text_contentImg_canvas,
-                event=event
+                event=event,
             )
             self.new_content_image = ImageTk.PhotoImage(self.new_content_image)  # type: ignore
             self.canvas.itemconfig(
                 self.image_content_canvas, image=self.new_content_image
             )
 
-        elif ID == 3: #change style image button
+        elif ID == 3:  # change style image button
             self.new_style_image = self._get_movingOver_image(
                 image_PIL=self.img_style_PIL,  # type: ignore
                 text_canvasItem=self.text_styleImg_canvas,
-                event=event
+                event=event,
             )
             self.new_style_image = ImageTk.PhotoImage(self.new_style_image)  # type: ignore
             self.canvas.itemconfig(
@@ -294,13 +300,11 @@ class StyleTransfer_window:
 
         return new_image_PIL
 
-    def enter_loading_status(self):  
+    def enter_loading_status(self):
         self.loading_state = True
 
         # unhidden loading animation
-        self.canvas.itemconfig(
-            self.loadingAnimation_canvas, state="normal"
-        )
+        self.canvas.itemconfig(self.loadingAnimation_canvas, state="normal")
 
         self.canvas.itemconfig(
             self.buttonGenerate_canvas, image=self.img_btnGenerate_loading
@@ -316,7 +320,6 @@ class StyleTransfer_window:
         self.canvas.itemconfig(
             self.buttonGenerate_canvas, image=self.img_btnGenerate_enabled
         )
-
 
 
 def main():

@@ -1,20 +1,18 @@
 import copy
-from typing import (
-    Tuple,
-    Optional,
-    List,
-)
-import cv2
-import onnxruntime
-import numpy as np
+from typing import List, Optional, Tuple
 
+import cv2
+import numpy as np
+import onnxruntime
 from utils.utils import keep_aspect_resize_and_pad
 
 
 class HandLandmark(object):
     def __init__(
         self,
-        model_path: Optional[str] = 'model/hand_landmark/hand_landmark_sparse_Nx3x224x224.onnx',
+        model_path: Optional[
+            str
+        ] = "model/hand_landmark/hand_landmark_sparse_Nx3x224x224.onnx",
         class_score_th: Optional[float] = 0.50,
         providers: Optional[List] = [
             # (
@@ -24,8 +22,8 @@ class HandLandmark(object):
             #         'trt_fp16_enable': True,
             #     }
             # ),
-            'CUDAExecutionProvider',
-            'CPUExecutionProvider',
+            "CUDAExecutionProvider",
+            "CPUExecutionProvider",
         ],
     ):
         """HandLandmark
@@ -76,7 +74,6 @@ class HandLandmark(object):
             output.name for output in self.onnx_session.get_outputs()
         ]
 
-
     def __call__(
         self,
         images: List[np.ndarray],
@@ -107,12 +104,21 @@ class HandLandmark(object):
         temp_images = copy.deepcopy(images)
 
         # PreProcess
-        inference_images, resized_images, resize_scales_224x224, half_pad_sizes_224x224 = self.__preprocess(
+        (
+            inference_images,
+            resized_images,
+            resize_scales_224x224,
+            half_pad_sizes_224x224,
+        ) = self.__preprocess(
             images=temp_images,
         )
 
         # Inference
-        xyz_x21s, hand_scores, left_hand_0_or_right_hand_1s = self.onnx_session.run(
+        (
+            xyz_x21s,
+            hand_scores,
+            left_hand_0_or_right_hand_1s,
+        ) = self.onnx_session.run(
             self.output_names,
             {input_name: inference_images for input_name in self.input_names},
         )
@@ -130,11 +136,10 @@ class HandLandmark(object):
 
         return hand_landmarks, rotated_image_size_leftrights
 
-
     def __preprocess(
         self,
         images: List[np.ndarray],
-        swap: Optional[Tuple[int,int,int]] = (2, 0, 1),
+        swap: Optional[Tuple[int, int, int]] = (2, 0, 1),
     ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """__preprocess
 
@@ -184,10 +189,16 @@ class HandLandmark(object):
             pad_h = padded_image.shape[0] - resized_image.shape[0]
             pad_w = padded_image.shape[1] - resized_image.shape[1]
             half_pad_h_224x224 = pad_h // 2
-            half_pad_h_224x224 = half_pad_h_224x224 if half_pad_h_224x224 >= 0 else 0
+            half_pad_h_224x224 = (
+                half_pad_h_224x224 if half_pad_h_224x224 >= 0 else 0
+            )
             half_pad_w_224x224 = pad_w // 2
-            half_pad_w_224x224 = half_pad_w_224x224 if half_pad_w_224x224 >= 0 else 0
-            half_pad_sizes_224x224.append([half_pad_w_224x224, half_pad_h_224x224])
+            half_pad_w_224x224 = (
+                half_pad_w_224x224 if half_pad_w_224x224 >= 0 else 0
+            )
+            half_pad_sizes_224x224.append(
+                [half_pad_w_224x224, half_pad_h_224x224]
+            )
 
             padded_image = np.divide(padded_image, 255.0)
             padded_image = padded_image[..., ::-1]
@@ -200,12 +211,12 @@ class HandLandmark(object):
             padded_images.append(padded_image)
             resized_images.append(resized_image)
 
-        return \
-            np.asarray(padded_images, dtype=np.float32), \
-            resized_images, \
-            np.asarray(resize_scales_224x224, dtype=np.float32), \
-            np.asarray(half_pad_sizes_224x224, dtype=np.int32)
-
+        return (
+            np.asarray(padded_images, dtype=np.float32),
+            resized_images,
+            np.asarray(resize_scales_224x224, dtype=np.float32),
+            np.asarray(half_pad_sizes_224x224, dtype=np.int32),
+        )
 
     def __postprocess(
         self,
@@ -252,14 +263,31 @@ class HandLandmark(object):
         extracted_hands = []
         rotated_image_size_leftrights = []
 
-        keep = hand_scores[:, 0] > self.class_score_th # hand_score > self.class_score_th
+        keep = (
+            hand_scores[:, 0] > self.class_score_th
+        )  # hand_score > self.class_score_th
         xyz_x21s = xyz_x21s[keep, :]
         hand_scores = hand_scores[keep, :]
         left_hand_0_or_right_hand_1s = left_hand_0_or_right_hand_1s[keep, :]
-        resized_images = [i for (i, k) in zip(resized_images, keep) if k == True]
+        resized_images = [
+            i for (i, k) in zip(resized_images, keep) if k is True
+        ]
 
-        for resized_image, resize_scale_224x224, half_pad_size_224x224, rect, xyz_x21, left_hand_0_or_right_hand_1 in \
-            zip(resized_images, resize_scales_224x224, half_pad_sizes_224x224, rects, xyz_x21s, left_hand_0_or_right_hand_1s):
+        for (
+            resized_image,
+            resize_scale_224x224,
+            half_pad_size_224x224,
+            rect,
+            xyz_x21,
+            left_hand_0_or_right_hand_1,
+        ) in zip(
+            resized_images,
+            resize_scales_224x224,
+            half_pad_sizes_224x224,
+            rects,
+            xyz_x21s,
+            left_hand_0_or_right_hand_1s,
+        ):
             """
             hands: sqn_rr_size, rotation, sqn_rr_center_x, sqn_rr_center_y
                 cx = int(sqn_rr_center_x * frame_width)
@@ -287,30 +315,43 @@ class HandLandmark(object):
             view_image = cv2.resize(
                 view_image,
                 dsize=None,
-                fx=1/resize_scale_224x224[0],
-                fy=1/resize_scale_224x224[1],
+                fx=1 / resize_scale_224x224[0],
+                fy=1 / resize_scale_224x224[1],
             )
-            rescaled_xy = np.asarray([[v[0], v[1]] for v in zip(rrn_lms[0::3], rrn_lms[1::3])], dtype=np.float32)
-            rescaled_xy[:, 0] = (rescaled_xy[:, 0] * input_w - half_pad_size_224x224[0]) / resize_scale_224x224[0]
-            rescaled_xy[:, 1] = (rescaled_xy[:, 1] * input_h - half_pad_size_224x224[1]) / resize_scale_224x224[1]
+            rescaled_xy = np.asarray(
+                [[v[0], v[1]] for v in zip(rrn_lms[0::3], rrn_lms[1::3])],
+                dtype=np.float32,
+            )
+            rescaled_xy[:, 0] = (
+                rescaled_xy[:, 0] * input_w - half_pad_size_224x224[0]
+            ) / resize_scale_224x224[0]
+            rescaled_xy[:, 1] = (
+                rescaled_xy[:, 1] * input_h - half_pad_size_224x224[1]
+            ) / resize_scale_224x224[1]
             rescaled_xy = rescaled_xy.astype(np.int32)
 
             height, width = view_image.shape[:2]
-            image_center = (width//2, height//2)
-            rotation_matrix = cv2.getRotationMatrix2D(image_center, -int(angle), 1)
-            abs_cos = abs(rotation_matrix[0,0])
-            abs_sin = abs(rotation_matrix[0,1])
+            image_center = (width // 2, height // 2)
+            rotation_matrix = cv2.getRotationMatrix2D(
+                image_center, -int(angle), 1
+            )
+            abs_cos = abs(rotation_matrix[0, 0])
+            abs_sin = abs(rotation_matrix[0, 1])
             bound_w = int(height * abs_sin + width * abs_cos)
             bound_h = int(height * abs_cos + width * abs_sin)
-            rotation_matrix[0, 2] += bound_w/2 - image_center[0]
-            rotation_matrix[1, 2] += bound_h/2 - image_center[1]
-            rotated_image = cv2.warpAffine(view_image, rotation_matrix, (bound_w, bound_h))
+            rotation_matrix[0, 2] += bound_w / 2 - image_center[0]
+            rotation_matrix[1, 2] += bound_h / 2 - image_center[1]
+            rotated_image = cv2.warpAffine(
+                view_image, rotation_matrix, (bound_w, bound_h)
+            )
 
             keypoints = []
-            for x,y in rescaled_xy:
-                coord_arr = np.array([
-                    [x, y, 1],  # Left-Top
-                ])
+            for x, y in rescaled_xy:
+                coord_arr = np.array(
+                    [
+                        [x, y, 1],  # Left-Top
+                    ]
+                )
                 new_coord = rotation_matrix.dot(coord_arr.T)
                 x_ls = new_coord[0]
                 y_ls = new_coord[1]
@@ -318,13 +359,27 @@ class HandLandmark(object):
 
             rotated_image_width = rotated_image.shape[1]
             rotated_image_height = rotated_image.shape[0]
-            roatated_hand_half_width = rotated_image_width//2
-            roatated_hand_half_height = rotated_image_height//2
+            roatated_hand_half_width = rotated_image_width // 2
+            roatated_hand_half_height = rotated_image_height // 2
 
-            hand_landmarks = np.asarray(keypoints, dtype=np.int32).reshape(-1,2)
-            hand_landmarks[..., 0] = hand_landmarks[..., 0] + rcx - roatated_hand_half_width
-            hand_landmarks[..., 1] = hand_landmarks[..., 1] + rcy - roatated_hand_half_height
+            hand_landmarks = np.asarray(keypoints, dtype=np.int32).reshape(
+                -1, 2
+            )
+            hand_landmarks[..., 0] = (
+                hand_landmarks[..., 0] + rcx - roatated_hand_half_width
+            )
+            hand_landmarks[..., 1] = (
+                hand_landmarks[..., 1] + rcy - roatated_hand_half_height
+            )
             extracted_hands.append(hand_landmarks)
-            rotated_image_size_leftrights.append([rotated_image_width, rotated_image_height, left_hand_0_or_right_hand_1])
+            rotated_image_size_leftrights.append(
+                [
+                    rotated_image_width,
+                    rotated_image_height,
+                    left_hand_0_or_right_hand_1,
+                ]
+            )
 
-        return np.asarray(extracted_hands, dtype=np.int32), np.asarray(rotated_image_size_leftrights)
+        return np.asarray(extracted_hands, dtype=np.int32), np.asarray(
+            rotated_image_size_leftrights
+        )
