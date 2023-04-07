@@ -12,6 +12,7 @@ from __future__ import absolute_import, division, print_function
 
 import queue
 import sys
+import torch
 import threading
 import tkinter
 from pathlib import Path
@@ -32,6 +33,7 @@ from src import (  # noqa: E402
     SpeechToViet,
     VietToEng,
     recording,
+    NeuralStyle
 )
 
 # create lock for prevent race condition
@@ -39,21 +41,6 @@ lock = threading.Lock()
 
 # create a long-term running task queue for output
 result_queue = queue.Queue()
-
-
-class Thread_text2image(Thread):
-    def __init__(self, input_text):
-        super().__init__()
-
-        self.input_text = input_text
-
-    def run(self):
-        engToImage = EngToImage()
-        result_img = engToImage(en_inputText=self.input_text)
-
-        # put to queue
-        with lock:
-            result_queue.put(result_img)
 
 
 class Thread_recording(Thread):
@@ -89,6 +76,44 @@ class Thread_speech2text(Thread):
             result_queue.put(en_resultText)
 
 
+class Thread_text2image(Thread):
+    def __init__(self, input_text):
+        super().__init__()
+
+        self.input_text = input_text
+
+    def run(self):
+        engToImage = EngToImage()
+        result_img = engToImage(en_inputText=self.input_text)
+
+        # put to queue
+        with lock:
+            result_queue.put(result_img)
+
+
+class Thread_styleTransfer(Thread):
+    def __init__(self, content_path: Path, style_modelName: str):
+        super().__init__()
+
+        self.content_path = content_path
+        self.style_modelName = style_modelName
+    
+    def run(self):
+        neuralStyle = NeuralStyle()
+
+        use_cuda = False
+        if torch.cuda.is_available() :
+            use_cuda = True
+
+        result_img = neuralStyle(args_content_image=self.content_path, 
+                                 args_model=self.style_modelName, 
+                                 args_cuda=use_cuda)
+    
+        # put to queue
+        with lock:
+            result_queue.put(result_img)
+
+    
 class Client(MainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -166,20 +191,78 @@ class StyleTransfer_extend(StyleTransfer_window):
     def get_click_event(self, ID: int, event=None):
         logger.debug("ID of click event: " + str(ID))
 
-        if ID == 0:
+        if ID == 0: #back button
             self.window.destroy()
             # restore the main window
             self.master.deiconify()
 
-        elif ID == 1:
-            self.canvas.itemconfig(
-                self.buttonGenerate_canvas, image=self.img_btnGenerate_loading
-            )
-            # unhidden loading animation
-            self.canvas.itemconfig(
-                self.loadingAnimation_canvas, state="normal"
-            )
+        elif ID == 1: #generate button
+            if self.loading_state is False:
+                self.enter_loading_status()
+                
+                #get path of input images
+                self.current_contentPath = self.content_paths[self.content_idx]
+                self.current_styleName = self.style_paths[self.style_idx].stem
 
+                # create thread for generate image (long-term task) and for getting value from queue
+                generateImg_thread = Thread_styleTransfer(content_path=self.current_contentPath, 
+                                                          style_modelName=str(self.current_styleName))
+                generateImg_thread.start()
+
+                self.monitor_gettingImage(generateImg_thread)
+            
+        elif ID == 2: #change content image button
+            #update PIL image
+            self.content_idx += 1
+            if self.content_idx == len(self.content_paths):
+                self.content_idx = 0
+            
+            #resize image                
+            self.img_content_PIL = self.resize_PIL_image(PIL_image=Image.open(self.content_paths[self.content_idx]))  # type: ignore
+
+            #update image
+            self.get_moveOver_event(ID=2, event="Enter")
+            
+        elif ID == 3: #change style image button
+            #update new image
+            self.style_idx+= 1
+            if self.style_idx == len(self.style_paths):
+                self.style_idx = 0
+                
+            #resize image                
+            self.img_style_PIL = self.resize_PIL_image(PIL_image=Image.open(self.style_paths[self.style_idx]))  # type: ignore
+            
+            #update image
+            self.get_moveOver_event(ID=3, event="Enter")
+    
+    def monitor_gettingImage(self, thread: Thread):
+        if thread.is_alive():
+            # check the thread every 100ms
+            logger.info("Still get image...")
+            self.window.after(100, lambda: self.monitor_gettingImage(thread))
+        else:
+            logger.info("Thread done!!")
+            new_resultImage = result_queue.get()
+
+            # exit updating status for GUI
+            self.exit_loading_status()
+
+            if new_resultImage is None:
+                logger.info("Image not found")
+
+            else:
+                # resize result image
+
+                # MUST USE GLOBAL VARIABLES
+                self.new_resultImage = new_resultImage.resize((self.w_resultSize, self.h_resultSize), Image.Resampling.LANCZOS)  # type: ignore
+
+                self.new_resultImage = ImageTk.PhotoImage(self.new_resultImage)
+
+                self.canvas.itemconfig(
+                    self.image_result_canvas, image=self.new_resultImage  # type: ignore
+                )
+
+                logger.debug("Image updated")
 
 class Speech2Image_extend(Speech2Image_window):
     def __init__(self, *args, **kwargs):

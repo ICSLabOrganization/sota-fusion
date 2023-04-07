@@ -26,8 +26,8 @@ from handGesture_recognition import HandGesture_recognition  # noqa: E402
 class VirtualControl(HandGesture_recognition):
     def __init__(self):
         super().__init__()
-        self.using_mouse = True
-        self.using_keyboard = False
+        self.using_mouse = False
+        self.using_keyboard = True
         self.stop_thread = False
 
     def is_HiFive_gesture(self, hand_landmarks: List):

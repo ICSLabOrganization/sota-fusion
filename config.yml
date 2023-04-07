@@ -40,3 +40,5 @@ speech-to-image:
     KEY : "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"
 
 style-transfer: 
+  input_size: [315, 197]
+  result_size: [402, 354]
