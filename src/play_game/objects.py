@@ -1,10 +1,15 @@
 import pygame
+from pathlib import Path
 
 SCREEN = WIDTH, HEIGHT = (600, 200)
-
+PARENTPATH  = Path(__file__).parent
+ASSERTPATH = PARENTPATH.joinpath('Assets')
+DINOPATH = ASSERTPATH.joinpath('Dino')
+CACTUSPATH = ASSERTPATH.joinpath('Cactus')
+PTERAPATH = ASSERTPATH.joinpath('Ptera')
 class Ground():
 	def __init__(self):
-		self.image = pygame.image.load('Assets/ground.png')
+		self.image = pygame.image.load(ASSERTPATH.joinpath('ground.png'))
 		self.rect = self.image.get_rect()
 
 		self.width = self.image.get_width()
@@ -35,16 +40,16 @@ class Dino():
 		self.duck_list = []
 
 		for i in range(1, 4):
-			img = pygame.image.load(f'Assets/Dino/{i}.png')
+			img = pygame.image.load(DINOPATH.joinpath(f'{i}.png'))
 			img = pygame.transform.scale(img, (52, 58))
 			self.run_list.append(img)
 
 		for i in range(4, 6):
-			img = pygame.image.load(f'Assets/Dino/{i}.png')
+			img = pygame.image.load(DINOPATH.joinpath(f'{i}.png'))
 			img = pygame.transform.scale(img, (70, 38))
 			self.duck_list.append(img)
 
-		self.dead_image = pygame.image.load(f'Assets/Dino/8.png')
+		self.dead_image = pygame.image.load(DINOPATH.joinpath('8.png'))
 		self.dead_image = pygame.transform.scale(self.dead_image, (52,58))
 
 		self.reset()
@@ -118,7 +123,7 @@ class Cactus(pygame.sprite.Sprite):
 		self.image_list = []
 		for i in range(5):
 			scale = 0.65
-			img = pygame.image.load(f'Assets/Cactus/{i+1}.png')
+			img = pygame.image.load(CACTUSPATH.joinpath(f'{i+1}.png'))
 			w, h = img.get_size()
 			img = pygame.transform.scale(img, (int(w*scale), int(h*scale)))
 			self.image_list.append(img)
@@ -146,7 +151,7 @@ class Ptera(pygame.sprite.Sprite):
 		self.image_list = []
 		for i in range(2):
 			scale = 0.65
-			img = pygame.image.load(f'Assets/Ptera/{i+1}.png')
+			img = pygame.image.load(PTERAPATH.joinpath(f'{i+1}.png'))
 			w, h = img.get_size()
 			img = pygame.transform.scale(img, (int(w*scale), int(h*scale)))
 			self.image_list.append(img)
@@ -178,7 +183,7 @@ class Ptera(pygame.sprite.Sprite):
 class Cloud(pygame.sprite.Sprite):
 	def __init__(self, x, y):
 		super(Cloud, self).__init__()
-		self.image = pygame.image.load(f'Assets/cloud.png')
+		self.image = pygame.image.load(ASSERTPATH.joinpath('cloud.png'))
 		self.image = pygame.transform.scale(self.image, (60, 18))
 		self.rect = self.image.get_rect()
 		self.rect.x = x
@@ -196,7 +201,7 @@ class Cloud(pygame.sprite.Sprite):
 class Star(pygame.sprite.Sprite):
 	def __init__(self, x, y, type):
 		super(Star, self).__init__()
-		image = pygame.image.load(f'Assets/stars.png')
+		image = pygame.image.load(ASSERTPATH.joinpath('stars.png'))
 		self.image_list = []
 		for i in range(3):
 			img = image.subsurface((0, 20*(i), 18, 18))

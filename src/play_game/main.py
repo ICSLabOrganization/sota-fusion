@@ -1,10 +1,6 @@
-# Dino
-
-# Author : Prajjwal Pathak (pyguru)
-# Date : Sunday, 17 October, 2021
-
 import random
 import pygame
+from pathlib import Path
 
 from objects import Ground, Dino, Cactus, Cloud, Ptera, Star
 
@@ -15,6 +11,19 @@ win = pygame.display.set_mode(SCREEN, pygame.NOFRAME)
 clock = pygame.time.Clock()
 FPS = 60
 
+PARENTPATH  = Path(__file__).parent
+ASSERTPATH = PARENTPATH.joinpath('Assets')
+
+start_img_path = ASSERTPATH.joinpath('start_img.png')
+game_over_img_path = ASSERTPATH.joinpath('game_over.png')
+replay_img_path = ASSERTPATH.joinpath('replay.png')
+numbers_img_path = ASSERTPATH.joinpath('numbers.png')
+
+SOUNDPATH = PARENTPATH.joinpath('Sounds')
+jump_fx_path = SOUNDPATH.joinpath('jump.wav')
+die_fx_path = SOUNDPATH.joinpath('die.wav')
+checkpoint_fx_path = SOUNDPATH.joinpath('checkPoint.wav')
+
 # COLORS *********************************************************************
 
 WHITE = (225,225,225)
@@ -23,26 +32,26 @@ GRAY = (32, 33, 36)
 
 # IMAGES *********************************************************************
 
-start_img = pygame.image.load('Assets/start_img.png')
+start_img = pygame.image.load(start_img_path)
 start_img = pygame.transform.scale(start_img, (60, 64))
 
-game_over_img = pygame.image.load('Assets/game_over.png')
+game_over_img = pygame.image.load(game_over_img_path)
 game_over_img = pygame.transform.scale(game_over_img, (200, 36))
 
-replay_img = pygame.image.load('Assets/replay.png')
+replay_img = pygame.image.load(replay_img_path)
 replay_img = pygame.transform.scale(replay_img, (40, 36))
 replay_rect = replay_img.get_rect()
 replay_rect.x = WIDTH // 2 - 20
 replay_rect.y = 100
 
-numbers_img = pygame.image.load('Assets/numbers.png')
+numbers_img = pygame.image.load(numbers_img_path)
 numbers_img = pygame.transform.scale(numbers_img, (120, 12))
 
 # SOUNDS *********************************************************************
 
-jump_fx = pygame.mixer.Sound('Sounds/jump.wav')
-die_fx = pygame.mixer.Sound('Sounds/die.wav')
-checkpoint_fx = pygame.mixer.Sound('Sounds/checkPoint.wav')
+jump_fx = pygame.mixer.Sound(jump_fx_path)
+die_fx = pygame.mixer.Sound(die_fx_path)
+checkpoint_fx = pygame.mixer.Sound(checkpoint_fx_path)
 
 # OBJECTS & GROUPS ***********************************************************
 
