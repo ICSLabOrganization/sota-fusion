@@ -17,6 +17,7 @@ import tkinter
 from pathlib import Path
 from threading import Thread
 from tkinter import Image, Tk
+from typing import Any
 
 import torch
 from loguru import logger  # type: ignore
@@ -29,6 +30,7 @@ from speech2image import Speech2Image_window  # noqa: E402
 from style_transfer import StyleTransfer_window  # noqa: E402
 
 from src import (  # noqa: E402
+    VirtualControl,
     DinosaurGame,
     EngToImage,
     NeuralStyle,
@@ -117,6 +119,15 @@ class Thread_styleTransfer(Thread):
             result_queue.put(result_img)
 
 
+class Thread_virtualControl(Thread):
+    def __init__(self):
+        super().__init__()
+
+    def run(self):
+        virtualControl = VirtualControl()
+        virtualControl.run()
+    
+
 class Client(MainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -149,6 +160,10 @@ class Client(MainWindow):
         self.window.withdraw()
         # open another window
         if ID == 1:
+            #create new thread for virtual keyboard
+            # virtualControl_thread = Thread_virtualControl()
+            # virtualControl_thread.start()
+
             #play game
             dinosaurGame = DinosaurGame()
             dinosaurGame()

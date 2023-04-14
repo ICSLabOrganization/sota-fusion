@@ -212,7 +212,7 @@ class VirtualControl(HandGesture_recognition):
                 # control keyboard
                 if self.using_keyboard:
                     if is_hiFiveGesture_happened:
-                        # pyautogui.press("backspace")
+                        pyautogui.press("space")
                         logger.debug("Virtual backspace")
 
             # screen showing #############################################################
