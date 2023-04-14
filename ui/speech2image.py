@@ -13,7 +13,6 @@ from __future__ import absolute_import, division, print_function
 from pathlib import Path
 from tkinter import Canvas, Entry, PhotoImage, Tk, Toplevel
 
-
 class Speech2Image_window:
     def __init__(self, master: Tk):
         self.master = master
@@ -27,11 +26,11 @@ class Speech2Image_window:
         OUTPUT_PATH = Path(__file__).parent  # type: ignore
         self.ASSETS_PATH = OUTPUT_PATH.joinpath("assets")
 
-        self.__static_ui()
-        self._binding_button_moveOver()
-
         # setup for loading state
         self.loading_state = False
+
+        self.__static_ui()
+        self._binding_button_moveOver()
 
     def __on_closing(self):
         self.master.destroy()
@@ -141,11 +140,11 @@ class Speech2Image_window:
             208.0, 139.0, image=self.entry_image
         )
 
+        # !bug segmentation fault
         self.entry = Entry(
             self.window,
             bd=0,
             bg="#2d2d2d",
-            # fg="#000716",
             fg="white",
             highlightthickness=0,
             insertbackground="white",

@@ -1,8 +1,10 @@
+import sys
 import random
 import pygame
 from pathlib import Path
 
-from .objects import Ground, Dino, Cactus, Cloud, Ptera, Star
+sys.path.append(str(Path(__file__).parent))
+from objects import Ground, Dino, Cactus, Cloud, Ptera, Star
 
 class DinosaurGame:
     def __init__(self):
@@ -267,6 +269,7 @@ class DinosaurGame:
             pygame.display.update()
 
         pygame.quit()
+        sys.exit
 
 
     # FUNCTIONS ******************************************************************

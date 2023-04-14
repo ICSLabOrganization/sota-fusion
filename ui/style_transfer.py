@@ -21,7 +21,7 @@ from src._config import load_config  # noqa: E402
 
 
 class StyleTransfer_window:
-    def __init__(self, master):
+    def __init__(self, master: Tk): 
         self.master = master
         self.window = Toplevel(self.master)
         self.window.resizable(False, False)

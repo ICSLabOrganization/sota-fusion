@@ -10,6 +10,7 @@ Copyright (c) 2023 ICSLab
 """
 from __future__ import absolute_import, division, print_function
 
+import time
 import queue
 import sys
 import threading
@@ -17,7 +18,6 @@ import tkinter
 from pathlib import Path
 from threading import Thread
 from tkinter import Image, Tk
-from typing import Any
 
 import torch
 from loguru import logger  # type: ignore
@@ -131,6 +131,9 @@ class Thread_virtualControl(Thread):
 class Client(MainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.sub_window = Speech2Image_extend(self.window)
+        self.sub_window.window.destroy()
 
         self.binding_button_click()
 
