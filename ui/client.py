@@ -29,6 +29,8 @@ from speech2image import Speech2Image_window  # noqa: E402
 from style_transfer import StyleTransfer_window  # noqa: E402
 
 from src import (  # noqa: E402
+    VirtualControl,
+    DinosaurGame,
     EngToImage,
     NeuralStyle,
     SpeechToViet,
@@ -147,6 +149,13 @@ class Client(MainWindow):
 
         self.window.withdraw()
         # open another window
+        if ID == 1:
+            #play game
+            dinosaurGame = DinosaurGame()
+            dinosaurGame()
+
+            self.window.deiconify()
+        
         if ID == 2:  # style transfer button
             self.sub_window = StyleTransfer_extend(self.window)
 

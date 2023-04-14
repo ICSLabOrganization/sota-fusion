@@ -75,7 +75,7 @@ class StyleTransfer_window:
         self.window.geometry("862x519")
         self.window.configure(bg="#0F1A2C")
 
-        # image button deactive and active
+        # image button deactivate and active
         self.img_btnGenerate = PhotoImage(
             file=self._relative_to_assets("btn_generate.png")
         )
