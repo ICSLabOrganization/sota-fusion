@@ -29,7 +29,6 @@ from speech2image import Speech2Image_window  # noqa: E402
 from style_transfer import StyleTransfer_window  # noqa: E402
 
 from src import (  # noqa: E402
-    VirtualControl,
     DinosaurGame,
     EngToImage,
     NeuralStyle,
