@@ -105,10 +105,10 @@ class HandLandmark(object):
 
         # PreProcess
         (
-            inference_images,
-            resized_images,
-            resize_scales_224x224,
-            half_pad_sizes_224x224,
+            inference_images, 
+            resized_images, 
+            resize_scales_224x224, 
+            half_pad_sizes_224x224 
         ) = self.__preprocess(
             images=temp_images,
         )
@@ -140,7 +140,7 @@ class HandLandmark(object):
         self,
         images: List[np.ndarray],
         swap: Optional[Tuple[int, int, int]] = (2, 0, 1),
-    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    ) -> Tuple[np.ndarray, List, np.ndarray, np.ndarray]:
         """__preprocess
 
         Parameters

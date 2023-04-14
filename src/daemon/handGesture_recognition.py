@@ -32,7 +32,7 @@ from _config import load_config  # noqa: E402
 def _loading_modelPath(model_type: str):
     filename = load_config(mode="daemon")["models"][model_type]
     ROOT_DIR = Path(__file__).parents[2]  # root directory
-    MODEL_PATH = ROOT_DIR.joinpath(*["assets", "ONNX_models", model_type])
+    MODEL_PATH = ROOT_DIR.joinpath(*["assets", "virtualControl_models", model_type])
 
     return str(MODEL_PATH.joinpath(filename))
 
@@ -259,7 +259,7 @@ class HandGesture_recognition:
         )  # for prevent unbounded
 
         if len(cropted_rotated_hands_images) > 0:
-
+            
             # Inference HandLandmark - バッチ処理
             hand_landmarks, rotated_image_size_leftrights = self.hand_landmark(
                 images=cropted_rotated_hands_images,

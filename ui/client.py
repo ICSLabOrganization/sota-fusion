@@ -263,8 +263,6 @@ class StyleTransfer_extend(StyleTransfer_window):
                 logger.info("Image not found")
 
             else:
-                # resize result image
-
                 # MUST USE GLOBAL VARIABLES
                 self.new_resultImage = new_resultImage.resize((self.w_resultSize, self.h_resultSize), Image.Resampling.LANCZOS)  # type: ignore
 
