@@ -1,7 +1,5 @@
 ###> ICSLabOrganization/SOTA_CV-App ###
 __pycache__
-virtualControl_models
-styleTransfer_models
 ##### Folders #####
 build/
 dist/
