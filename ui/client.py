@@ -10,7 +10,6 @@ Copyright (c) 2023 ICSLab
 """
 from __future__ import absolute_import, division, print_function
 
-import time
 import queue
 import sys
 import threading
@@ -164,8 +163,8 @@ class Client(MainWindow):
         # open another window
         if ID == 1:
             #create new thread for virtual keyboard
-            # virtualControl_thread = Thread_virtualControl()
-            # virtualControl_thread.start()
+            virtualControl_thread = Thread_virtualControl()
+            virtualControl_thread.start()
 
             #play game
             dinosaurGame = DinosaurGame()
@@ -444,6 +443,7 @@ class Speech2Image_extend(Speech2Image_window):
 
 if __name__ == "__main__":
     root = Tk()
+    root.title("Sota-fusion")
     # send window to front of all windows
     root.attributes("-topmost", True)
 
